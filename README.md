@@ -1,5 +1,7 @@
 # Bekara
 
+Bekara is a family financial companion that empowers everyday families to manage money wisely and prepare for a better future.
+
 Riwayat perubahan yang dikerjakan Codex dicatat di [CHANGELOG-AI.md](CHANGELOG-AI.md).
 
 Aplikasi Flutter offline-capable untuk pencatatan keuangan suami–istri. Drift/SQLite menyimpan cache dan antrean lokal; Supabase PostgreSQL menjadi sumber kebenaran bersama.
