@@ -16,6 +16,7 @@ Catatan ini merekam perubahan yang dikerjakan oleh Codex untuk Bekara. Rahasia s
 - Menambahkan migration komentar schema `202608050001_bekara_branding.sql`; belum dicatat sebagai deployed pada tanggal ini.
 - Menjalankan `flutter analyze` tanpa issue dan `flutter test` dengan 2 test lulus.
 - Membuat ulang debug APK Bekara dari build bersih.
+- Menambahkan baseline Git dan mengecualikan metadata lokal Supabase dari version control.
 
 ### Catatan kompatibilitas
 
