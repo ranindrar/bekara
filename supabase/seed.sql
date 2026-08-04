@@ -1,0 +1,2 @@
+-- Seed data will be added with authentication and category implementation.
+-- Never put personal or production credentials in this file.
