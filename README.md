@@ -6,7 +6,7 @@ Aplikasi Flutter offline-capable untuk pencatatan keuangan suami–istri. Drift/
 
 ## Status
 
-Fondasi project selesai: Flutter scaffold, Riverpod, GoRouter, Drift, bootstrap Supabase opsional, migration P0 awal, analyzer, dan smoke test.
+Fondasi kode selesai: Flutter scaffold, Riverpod, GoRouter, Drift, bootstrap Supabase opsional, migration P0 awal, error handling/logging dasar, CI, analyzer, dan automated test. Verifikasi operasional yang masih membutuhkan perangkat atau credential dicatat di [implementation status](docs/implementation-status.md).
 
 ## Menjalankan
 

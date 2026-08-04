@@ -1,4 +1,5 @@
 import 'package:bekara/app/bekara_app.dart';
+import 'package:bekara/app/bootstrap_error_app.dart';
 import 'package:bekara/core/config/app_environment.dart';
 import 'package:bekara/core/database/app_database.dart';
 import 'package:bekara/core/providers/core_providers.dart';
@@ -9,6 +10,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
+  testWidgets('shows a safe message when bootstrap fails', (tester) async {
+    await tester.pumpWidget(const BootstrapErrorApp());
+
+    expect(find.text('Bekara tidak dapat dimulai'), findsOneWidget);
+    expect(find.textContaining('Tutup lalu buka kembali'), findsOneWidget);
+  });
+
   testWidgets('shows local-ready and Supabase configuration status', (
     tester,
   ) async {

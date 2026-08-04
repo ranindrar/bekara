@@ -4,6 +4,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../core/config/app_environment.dart';
 import '../core/database/app_database.dart';
+import '../core/logging/app_logger.dart';
 import '../core/providers/core_providers.dart';
 import 'bekara_app.dart';
 
@@ -16,6 +17,12 @@ class AppBootstrap {
 
 Future<AppBootstrap> bootstrapApplication() async {
   const environment = AppEnvironment.fromDefines();
+  AppLogger.info(
+    environment.hasSupabaseConfiguration
+        ? 'Starting with Supabase configuration'
+        : 'Starting in local-only mode',
+    name: 'bekara.bootstrap',
+  );
   if (environment.hasSupabaseConfiguration) {
     await Supabase.initialize(
       url: environment.supabaseUrl,

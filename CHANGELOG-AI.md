@@ -4,6 +4,17 @@ Catatan ini merekam perubahan yang dikerjakan oleh Codex untuk Bekara. Rahasia s
 
 ## 2026-08-05
 
+### Penyelesaian fondasi Fase 0
+
+- Menambahkan logging dasar yang tidak mencatat credential atau payload finansial.
+- Menangkap error Flutter, platform, zone, dan kegagalan bootstrap; kegagalan startup menampilkan pesan aman kepada pengguna.
+- Menambahkan GitHub Actions untuk code generation Drift, analyzer, test coverage, dan debug APK build.
+- Menambahkan test konfigurasi environment dan tampilan kegagalan bootstrap.
+- Memperbarui status implementasi agar membedakan fondasi kode yang selesai dari verifikasi operasional.
+- Supabase CLI dan perangkat Android tidak tersedia pada sesi ini. Deployment migration branding, test RLS/RPC remote, dan auth test pada perangkat nyata tetap `PENDING OPS` dan tidak diklaim selesai.
+- `flutter doctor` menemukan Android command-line tools belum terpasang dan status license belum diketahui.
+- Verifikasi akhir: `flutter analyze` tanpa issue, 5 automated test lulus, dan debug APK berhasil dibuat.
+
 ### Branding — Dompet Keluarga menjadi Bekara
 
 - Mengadopsi nama produk **Bekara** berdasarkan `Bekara_Brand_Identity.md`.
