@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/providers/core_providers.dart';
 import '../../bootstrap/presentation/bootstrap_page.dart';
+import '../../household/presentation/household_gate.dart';
 import 'auth_controller.dart';
 import 'auth_page.dart';
 
@@ -19,7 +20,7 @@ class AuthGate extends ConsumerWidget {
       stream: service.authStateChanges,
       builder: (context, snapshot) => client.auth.currentSession == null
           ? const AuthPage()
-          : const BootstrapPage(),
+          : const HouseholdGate(),
     );
   }
 }

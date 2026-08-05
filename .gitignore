@@ -38,6 +38,7 @@ config/*.json
 /build/
 /coverage/
 supabase/.temp/
+supabase/.branches/
 
 # Symbolication related
 app.*.symbols

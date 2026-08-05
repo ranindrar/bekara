@@ -1,0 +1,174 @@
+import 'package:intl/intl.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:uuid/uuid.dart';
+
+import '../domain/finance_validation.dart';
+
+class FinanceService {
+  FinanceService(this.client);
+  final SupabaseClient client;
+  static const _uuid = Uuid();
+
+  Future<List<Map<String, dynamic>>> wallets() => _list('list_wallets');
+  Future<List<Map<String, dynamic>>> categories([String? direction]) =>
+      _list('list_categories', {'category_direction': direction});
+  Future<List<Map<String, dynamic>>> transactions() =>
+      _list('list_transactions');
+  Future<List<Map<String, dynamic>>> categoryReport() =>
+      _list('report_category');
+
+  Future<Map<String, dynamic>> dashboard() async {
+    final value = await client.rpc('dashboard_summary');
+    return Map<String, dynamic>.from(value as Map);
+  }
+
+  Future<void> createWallet({
+    required String name,
+    required String type,
+    required String openingBalance,
+    required bool shared,
+  }) async {
+    await client.rpc(
+      'create_wallet',
+      params: {
+        'payload': {
+          'name': FinanceValidation.requiredText(
+            name,
+            'Nama dompet',
+            minLength: 2,
+          ),
+          'walletType': type,
+          'openingBalance': FinanceValidation.normalizeAmount(
+            openingBalance,
+            allowZero: true,
+          ),
+          'isShared': shared,
+          'acceptsHouseholdTransfer': shared,
+        },
+      },
+    );
+  }
+
+  Future<void> createCategory({
+    required String name,
+    required String direction,
+    required String scope,
+  }) async {
+    await client.rpc(
+      'create_category',
+      params: {
+        'payload': {
+          'name': FinanceValidation.requiredText(
+            name,
+            'Nama kategori',
+            minLength: 2,
+          ),
+          'direction': direction,
+          'scope': scope,
+          'necessityType': direction == 'EXPENSE' ? 'FLEXIBLE' : '',
+        },
+      },
+    );
+  }
+
+  Future<void> postTransaction({
+    required String walletId,
+    required String categoryId,
+    required String kind,
+    required String amount,
+    required String description,
+    required String scope,
+    required String privacyMode,
+  }) async {
+    await client.rpc(
+      'post_transaction',
+      params: {
+        'payload': {
+          'clientReferenceId': _uuid.v4(),
+          'walletId': walletId,
+          'categoryId': categoryId,
+          'kind': kind,
+          'amount': FinanceValidation.normalizeAmount(amount),
+          'description': description.trim(),
+          'transactionDate': DateFormat('yyyy-MM-dd').format(DateTime.now()),
+          'scope': scope,
+          'privacyMode': scope == 'HOUSEHOLD'
+              ? 'HOUSEHOLD_VISIBLE'
+              : privacyMode,
+        },
+      },
+    );
+  }
+
+  Future<void> postTransfer({
+    required String sourceWalletId,
+    required String destinationWalletId,
+    required String amount,
+    required String description,
+  }) async {
+    await client.rpc(
+      'post_transfer',
+      params: {
+        'payload': {
+          'clientReferenceId': _uuid.v4(),
+          'sourceWalletId': sourceWalletId,
+          'destinationWalletId': destinationWalletId,
+          'amount': FinanceValidation.normalizeAmount(amount),
+          'description': description.trim(),
+          'transactionDate': DateFormat('yyyy-MM-dd').format(DateTime.now()),
+        },
+      },
+    );
+  }
+
+  Future<void> reverseTransaction(String transactionId, String reason) async {
+    await client.rpc(
+      'reverse_transaction',
+      params: {
+        'transaction_id': transactionId,
+        'transaction_date': DateFormat('yyyy-MM-dd').format(DateTime.now()),
+        'reason': FinanceValidation.requiredText(
+          reason,
+          'Alasan',
+          minLength: 3,
+        ),
+        'client_reference_id': _uuid.v4(),
+      },
+    );
+  }
+
+  Future<void> reconcileWallet(
+    String walletId,
+    String actualBalance,
+    String reason,
+  ) async {
+    await client.rpc(
+      'reconcile_wallet',
+      params: {
+        'payload': {
+          'walletId': walletId,
+          'actualBalance': FinanceValidation.normalizeSignedAmount(
+            actualBalance,
+          ),
+          'reason': FinanceValidation.requiredText(
+            reason,
+            'Alasan',
+            minLength: 3,
+          ),
+          'transactionDate': DateFormat('yyyy-MM-dd').format(DateTime.now()),
+          'clientReferenceId': _uuid.v4(),
+        },
+      },
+    );
+  }
+
+  Future<List<Map<String, dynamic>>> _list(
+    String function, [
+    Map<String, dynamic>? params,
+  ]) async {
+    final value = await client.rpc(function, params: params);
+    return (value as List)
+        .map((item) => Map<String, dynamic>.from(item as Map))
+        .toList();
+  }
+}

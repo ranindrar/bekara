@@ -2,7 +2,39 @@
 
 Catatan ini merekam perubahan yang dikerjakan oleh Codex untuk Bekara. Rahasia seperti access token, password, dan credential lokal tidak boleh dicantumkan.
 
+## 2026-08-06
+
+### Hardening keamanan Fase 1
+
+- Memperbaiki potensi kebocoran transaksi `PRIVATE_FULL` dari RPC security-definer.
+- Memasking dompet, kategori, arah, dan deskripsi transaksi `PRIVATE_SUMMARY` milik pasangan.
+- Membatasi kategori privat dan mutation pada dompet milik pasangan.
+- Mengubah dashboard dan laporan kategori agar cash-flow keluarga hanya memakai scope `HOUSEHOLD`.
+- Menambahkan idempotensi payload untuk transaksi, transfer, dan reversal serta audit log transfer.
+- Reversal transfer sekarang mengisi `transfers.reversed_at`.
+- Menambahkan pilihan mode privasi, normalisasi nominal Indonesia, dan pesan error pengguna yang aman.
+- Menambahkan 10 regression assertion PostgreSQL dan 6 test validasi finance; total Flutter test menjadi 11.
+- Migration `202608060001_phase1_security_hardening.sql` diterapkan ke remote Supabase.
+
 ## 2026-08-05
+
+### Fase 1 — household onboarding
+
+- Menambahkan migration household invitation serta RPC `get_my_context`, `create_household`, `create_invitation`, dan `accept_invitation`.
+- Menambahkan gate konteks keluarga setelah autentikasi dan UI untuk membuat atau bergabung ke household.
+- Owner dapat membuat kode undangan pasangan yang terikat email dan berlaku tujuh hari.
+- Menambahkan unit test parsing household context.
+- Migration branding dan `202608050002_household_onboarding.sql` telah diterapkan ke remote Supabase; dry-run setelah deployment menyatakan database up-to-date.
+
+### Fase 1 — pencatatan dasar selesai
+
+- Menambahkan migration ledger Fase 1 untuk kategori bawaan, wallet, income, expense, transfer internal, dashboard, dan laporan kategori.
+- Menambahkan RPC lifecycle untuk update wallet, arsip kategori, reversal transaksi, dan rekonsiliasi saldo.
+- Menambahkan UI utama dengan navigasi beranda, transaksi, dompet, dan laporan.
+- Menambahkan form dompet, kategori, income/expense, transfer internal, reversal, dan rekonsiliasi.
+- Migration `202608050003_phase1_ledger.sql`, `202608050004_phase1_lifecycle.sql`, dan hardening permission `202608050005_phase1_function_hardening.sql` diterapkan ke remote Supabase.
+- Verifikasi: analyzer tanpa issue, 7 automated test lulus, dan debug APK berhasil dibangun.
+- Integration test RLS dengan dua akun dan real-device test tetap menjadi gate operasional sebelum distribusi.
 
 ### Penyelesaian fondasi Fase 0
 
