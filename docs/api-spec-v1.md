@@ -143,6 +143,6 @@ Kombinasi `(actor_user_id, operation_type, client_reference_id)` unik. Server me
 - Tombstone dikirim untuk data yang diarsipkan/reversed.
 - `VERSION_CONFLICT` menyertakan versi server yang sudah dimasking sesuai izin.
 
-## 11. P1/P2 yang belum menjadi kontrak v1
+## 11. Kontrak lanjutan
 
-Budget/forecast, PayLater/kartu kredit, attachment, notifikasi, import CSV, dan ekspor Google Sheets akan memiliki RPC terpisah setelah aturan domainnya final.
+Periode, budget, forecast, tagihan rutin, sinkronisasi, dan backup telah difinalkan dalam [API Phase 2](api-spec-v2.md). PayLater/kartu kredit lengkap, attachment, push notification, dan import CSV tetap ditunda ke fase berikutnya.

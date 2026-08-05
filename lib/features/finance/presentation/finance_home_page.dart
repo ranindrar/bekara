@@ -4,12 +4,16 @@ import 'package:intl/intl.dart';
 
 import '../../../core/providers/core_providers.dart';
 import '../../auth/presentation/auth_controller.dart';
+import '../../cash_flow/presentation/cash_flow_page.dart';
 import '../../household/domain/household_context.dart';
 import '../data/finance_service.dart';
 import '../domain/finance_validation.dart';
 
 final financeServiceProvider = Provider<FinanceService>(
-  (ref) => FinanceService(ref.watch(supabaseClientProvider)!),
+  (ref) => FinanceService(
+    ref.watch(supabaseClientProvider)!,
+    ref.watch(appDatabaseProvider),
+  ),
 );
 final financeRefreshProvider = StateProvider<int>((ref) => 0);
 final financeDataProvider = FutureProvider<Map<String, dynamic>>((ref) async {
@@ -39,7 +43,13 @@ class FinanceHomePage extends ConsumerStatefulWidget {
 
 class _FinanceHomePageState extends ConsumerState<FinanceHomePage> {
   int _index = 0;
-  final _titles = const ['Ringkasan', 'Transaksi', 'Dompet', 'Laporan'];
+  final _titles = const [
+    'Ringkasan',
+    'Transaksi',
+    'Dompet',
+    'Laporan',
+    'Cash Flow',
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -89,15 +99,16 @@ class _FinanceHomePageState extends ConsumerState<FinanceHomePage> {
               ),
               _TransactionsTab(
                 transactions: transactions,
-                onReverse: _reverseTransaction,
+                onReverse: _correctTransaction,
               ),
               _WalletsTab(wallets: wallets, onReconcile: _reconcileWallet),
               _ReportTab(report: report),
+              CashFlowPage(contextData: widget.contextData),
             ],
           );
         },
       ),
-      floatingActionButton: data.valueOrNull == null
+      floatingActionButton: data.valueOrNull == null || ![1, 2].contains(_index)
           ? null
           : FloatingActionButton.extended(
               onPressed: () {
@@ -105,7 +116,7 @@ class _FinanceHomePageState extends ConsumerState<FinanceHomePage> {
                     data.value!['wallets'] as List<Map<String, dynamic>>;
                 if (_index == 2) {
                   _showWalletDialog();
-                } else {
+                } else if (_index == 1) {
                   _showTransactionDialog(wallets);
                 }
               },
@@ -131,6 +142,10 @@ class _FinanceHomePageState extends ConsumerState<FinanceHomePage> {
           NavigationDestination(
             icon: Icon(Icons.pie_chart_outline),
             label: 'Laporan',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.insights_outlined),
+            label: 'Cash Flow',
           ),
         ],
       ),
@@ -283,6 +298,7 @@ class _FinanceHomePageState extends ConsumerState<FinanceHomePage> {
     }
     final amount = TextEditingController();
     final description = TextEditingController();
+    var transactionDate = DateTime.now();
     var kind = 'EXPENSE';
     var scope = 'HOUSEHOLD';
     var privacyMode = 'PRIVATE_FULL';
@@ -420,6 +436,25 @@ class _FinanceHomePageState extends ConsumerState<FinanceHomePage> {
                   controller: description,
                   decoration: const InputDecoration(labelText: 'Keterangan'),
                 ),
+                ListTile(
+                  contentPadding: EdgeInsets.zero,
+                  title: const Text('Tanggal transaksi'),
+                  subtitle: Text(
+                    DateFormat('dd MMMM yyyy', 'id_ID').format(transactionDate),
+                  ),
+                  trailing: const Icon(Icons.calendar_month),
+                  onTap: () async {
+                    final picked = await showDatePicker(
+                      context: context,
+                      initialDate: transactionDate,
+                      firstDate: DateTime(2020),
+                      lastDate: DateTime.now(),
+                    );
+                    if (picked != null) {
+                      setDialogState(() => transactionDate = picked);
+                    }
+                  },
+                ),
               ],
             ),
           ),
@@ -446,6 +481,7 @@ class _FinanceHomePageState extends ConsumerState<FinanceHomePage> {
                 destinationWalletId: destinationId!,
                 amount: amount.text,
                 description: description.text,
+                transactionDate: transactionDate,
               ),
         );
       }
@@ -461,6 +497,7 @@ class _FinanceHomePageState extends ConsumerState<FinanceHomePage> {
                 description: description.text,
                 scope: scope,
                 privacyMode: privacyMode,
+                transactionDate: transactionDate,
               ),
         );
       }
@@ -482,18 +519,46 @@ class _FinanceHomePageState extends ConsumerState<FinanceHomePage> {
     }
   }
 
-  Future<void> _reverseTransaction(Map<String, dynamic> transaction) async {
-    if (transaction['is_owner'] != true || transaction['status'] != 'POSTED') {
+  Future<void> _correctTransaction(Map<String, dynamic> transaction) async {
+    final canCorrect =
+        transaction['is_owner'] == true || transaction['scope'] == 'HOUSEHOLD';
+    if (!canCorrect || transaction['status'] != 'POSTED') {
       return;
     }
     final reason = TextEditingController();
+    final amount = TextEditingController(
+      text: transaction['amount'].toString(),
+    );
+    final description = TextEditingController(
+      text: transaction['description'] as String? ?? '',
+    );
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Batalkan transaksi?'),
-        content: TextField(
-          controller: reason,
-          decoration: const InputDecoration(labelText: 'Alasan koreksi'),
+        title: const Text('Koreksi transaksi'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextField(
+              controller: amount,
+              keyboardType: TextInputType.number,
+              decoration: const InputDecoration(
+                labelText: 'Nominal benar (0 untuk batalkan)',
+              ),
+            ),
+            TextField(
+              controller: description,
+              decoration: const InputDecoration(labelText: 'Keterangan benar'),
+            ),
+            TextField(
+              controller: reason,
+              decoration: const InputDecoration(labelText: 'Alasan koreksi'),
+            ),
+            const SizedBox(height: 8),
+            const Text(
+              'Transaksi asli tidak dihapus. Sistem membuat reversal dan pengganti yang dapat diaudit.',
+            ),
+          ],
         ),
         actions: [
           TextButton(
@@ -502,7 +567,7 @@ class _FinanceHomePageState extends ConsumerState<FinanceHomePage> {
           ),
           FilledButton(
             onPressed: () => Navigator.pop(context, true),
-            child: const Text('Balikkan'),
+            child: const Text('Simpan koreksi'),
           ),
         ],
       ),
@@ -510,11 +575,26 @@ class _FinanceHomePageState extends ConsumerState<FinanceHomePage> {
     if (confirmed == true && reason.text.trim().isNotEmpty) {
       await _execute(
         () => ref
-            .read(financeServiceProvider)
-            .reverseTransaction(transaction['id'] as String, reason.text),
+            .read(cashFlowServiceProvider)
+            .correctTransaction(
+              transactionId: transaction['id'] as String,
+              correctedAmount: FinanceValidation.normalizeAmount(
+                amount.text,
+                allowZero: true,
+              ),
+              reason: FinanceValidation.requiredText(
+                reason.text,
+                'Alasan',
+                minLength: 3,
+              ),
+              description: description.text,
+              correctionDate: DateTime.now(),
+            ),
       );
     }
     reason.dispose();
+    amount.dispose();
+    description.dispose();
   }
 
   Future<void> _reconcileWallet(Map<String, dynamic> wallet) async {

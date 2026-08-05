@@ -37,7 +37,22 @@ privacy_mode      PRIVATE_FULL, PRIVATE_SUMMARY, HOUSEHOLD_VISIBLE
 period_type       PERSONAL, HOUSEHOLD
 period_status     OPEN, REVIEWED, LOCKED
 aggregate_status  POSTED, REVERSED
+period_type       PERSONAL, HOUSEHOLD
+period_status     OPEN, REVIEWED, LOCKED
+recurrence        WEEKLY, MONTHLY
 ```
+
+## 3.1 Tabel Fase 2
+
+| Tabel | Kolom domain utama | Constraint penting |
+|---|---|---|
+| `member_period_settings` | member_id, start_day | satu setting per member, day 1–31 |
+| `financial_periods` | type, member_id, start/end, status, auto_lock_on, snapshots | unique scope/range; personal wajib member |
+| `budgets` | period_id, category_id, scope, owner_id, amount | satu budget aktif per target/periode |
+| `locked_funds` | wallet_id, owner_id, label, amount, active | soft lock tidak boleh melebihi saldo saat dibuat |
+| `recurring_obligations` | frequency, due rule, estimate, wallet/category/scope | weekly atau monthly |
+| `obligation_occurrences` | due_date, estimate/actual, status, transaction_id | satu occurrence per series/tanggal |
+| `sync_changes` | sequence, household_id, entity/id, operation | cursor monotonic dan tombstone |
 
 ## 4. Indeks minimum
 

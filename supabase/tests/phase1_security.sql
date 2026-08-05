@@ -1,5 +1,7 @@
 begin;
 create extension if not exists pgtap;
+set local role postgres;
+set local search_path = extensions, public;
 
 select plan(10);
 
@@ -27,4 +29,3 @@ select ok((select prosecdef from pg_proc join pg_namespace on pg_namespace.oid =
 
 select * from finish();
 rollback;
-

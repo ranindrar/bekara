@@ -4,6 +4,20 @@ Catatan ini merekam perubahan yang dikerjakan oleh Codex untuk Bekara. Rahasia s
 
 ## 2026-08-06
 
+### Implementasi Fase 2 — Cash Flow
+
+- Menambahkan periode personal/household dengan cycle tanggal 1–31, review, manual lock, dan auto-lock dua siklus setelah periode berakhir.
+- Menambahkan koreksi shared/pasca-lock berupa reversal dan transaksi pengganti, lengkap dengan audit dan laporan koreksi.
+- Menambahkan budget personal/household, progress, threshold, proyeksi, serta formula kebutuhan rutin tanpa double count.
+- Menambahkan soft locked funds per wallet dan guard agar dana yang dialokasikan harus dilepas sebelum digunakan.
+- Menambahkan forecast saldo bebas, batas aman harian, dan status kesehatan cash-flow.
+- Menambahkan tagihan rutin weekly/monthly, clamp akhir bulan, konfirmasi pembayaran, skip, dan reschedule.
+- Menambahkan pemilihan tanggal transaksi lampau selama periode masih terbuka.
+- Memperluas Drift ke schema v2 serta menambahkan cursor sync, tombstone, retry, conflict, dan metrik non-sensitif.
+- Menambahkan backup JSON ber-checksum, restore cache idempotent, dan CSV privacy-aware untuk Google Sheets.
+- Migration `202608060002`–`202608060007` diterapkan ke remote Supabase.
+- Verifikasi: analyzer bersih, 20 Flutter test lulus, debug APK berhasil, database lint bersih, dan 32 pgTAP assertion lulus pada remote.
+
 ### Hardening keamanan Fase 1
 
 - Memperbaiki potensi kebocoran transaksi `PRIVATE_FULL` dari RPC security-definer.

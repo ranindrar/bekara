@@ -1208,6 +1208,1123 @@ class PendingMutationsCompanion extends UpdateCompanion<PendingMutation> {
   }
 }
 
+class $CachedSyncChangesTable extends CachedSyncChanges
+    with TableInfo<$CachedSyncChangesTable, CachedSyncChange> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $CachedSyncChangesTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _entityTypeMeta = const VerificationMeta(
+    'entityType',
+  );
+  @override
+  late final GeneratedColumn<String> entityType = GeneratedColumn<String>(
+    'entity_type',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _entityIdMeta = const VerificationMeta(
+    'entityId',
+  );
+  @override
+  late final GeneratedColumn<String> entityId = GeneratedColumn<String>(
+    'entity_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _householdIdMeta = const VerificationMeta(
+    'householdId',
+  );
+  @override
+  late final GeneratedColumn<String> householdId = GeneratedColumn<String>(
+    'household_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _operationMeta = const VerificationMeta(
+    'operation',
+  );
+  @override
+  late final GeneratedColumn<String> operation = GeneratedColumn<String>(
+    'operation',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _serverSequenceMeta = const VerificationMeta(
+    'serverSequence',
+  );
+  @override
+  late final GeneratedColumn<BigInt> serverSequence = GeneratedColumn<BigInt>(
+    'server_sequence',
+    aliasedName,
+    false,
+    type: DriftSqlType.bigInt,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _tombstoneMeta = const VerificationMeta(
+    'tombstone',
+  );
+  @override
+  late final GeneratedColumn<bool> tombstone = GeneratedColumn<bool>(
+    'tombstone',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("tombstone" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
+  static const VerificationMeta _changedAtMeta = const VerificationMeta(
+    'changedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> changedAt = GeneratedColumn<DateTime>(
+    'changed_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    entityType,
+    entityId,
+    householdId,
+    operation,
+    serverSequence,
+    tombstone,
+    changedAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'cached_sync_changes';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<CachedSyncChange> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('entity_type')) {
+      context.handle(
+        _entityTypeMeta,
+        entityType.isAcceptableOrUnknown(data['entity_type']!, _entityTypeMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_entityTypeMeta);
+    }
+    if (data.containsKey('entity_id')) {
+      context.handle(
+        _entityIdMeta,
+        entityId.isAcceptableOrUnknown(data['entity_id']!, _entityIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_entityIdMeta);
+    }
+    if (data.containsKey('household_id')) {
+      context.handle(
+        _householdIdMeta,
+        householdId.isAcceptableOrUnknown(
+          data['household_id']!,
+          _householdIdMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_householdIdMeta);
+    }
+    if (data.containsKey('operation')) {
+      context.handle(
+        _operationMeta,
+        operation.isAcceptableOrUnknown(data['operation']!, _operationMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_operationMeta);
+    }
+    if (data.containsKey('server_sequence')) {
+      context.handle(
+        _serverSequenceMeta,
+        serverSequence.isAcceptableOrUnknown(
+          data['server_sequence']!,
+          _serverSequenceMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_serverSequenceMeta);
+    }
+    if (data.containsKey('tombstone')) {
+      context.handle(
+        _tombstoneMeta,
+        tombstone.isAcceptableOrUnknown(data['tombstone']!, _tombstoneMeta),
+      );
+    }
+    if (data.containsKey('changed_at')) {
+      context.handle(
+        _changedAtMeta,
+        changedAt.isAcceptableOrUnknown(data['changed_at']!, _changedAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_changedAtMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {entityType, entityId};
+  @override
+  CachedSyncChange map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return CachedSyncChange(
+      entityType: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}entity_type'],
+      )!,
+      entityId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}entity_id'],
+      )!,
+      householdId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}household_id'],
+      )!,
+      operation: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}operation'],
+      )!,
+      serverSequence: attachedDatabase.typeMapping.read(
+        DriftSqlType.bigInt,
+        data['${effectivePrefix}server_sequence'],
+      )!,
+      tombstone: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}tombstone'],
+      )!,
+      changedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}changed_at'],
+      )!,
+    );
+  }
+
+  @override
+  $CachedSyncChangesTable createAlias(String alias) {
+    return $CachedSyncChangesTable(attachedDatabase, alias);
+  }
+}
+
+class CachedSyncChange extends DataClass
+    implements Insertable<CachedSyncChange> {
+  final String entityType;
+  final String entityId;
+  final String householdId;
+  final String operation;
+  final BigInt serverSequence;
+  final bool tombstone;
+  final DateTime changedAt;
+  const CachedSyncChange({
+    required this.entityType,
+    required this.entityId,
+    required this.householdId,
+    required this.operation,
+    required this.serverSequence,
+    required this.tombstone,
+    required this.changedAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['entity_type'] = Variable<String>(entityType);
+    map['entity_id'] = Variable<String>(entityId);
+    map['household_id'] = Variable<String>(householdId);
+    map['operation'] = Variable<String>(operation);
+    map['server_sequence'] = Variable<BigInt>(serverSequence);
+    map['tombstone'] = Variable<bool>(tombstone);
+    map['changed_at'] = Variable<DateTime>(changedAt);
+    return map;
+  }
+
+  CachedSyncChangesCompanion toCompanion(bool nullToAbsent) {
+    return CachedSyncChangesCompanion(
+      entityType: Value(entityType),
+      entityId: Value(entityId),
+      householdId: Value(householdId),
+      operation: Value(operation),
+      serverSequence: Value(serverSequence),
+      tombstone: Value(tombstone),
+      changedAt: Value(changedAt),
+    );
+  }
+
+  factory CachedSyncChange.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return CachedSyncChange(
+      entityType: serializer.fromJson<String>(json['entityType']),
+      entityId: serializer.fromJson<String>(json['entityId']),
+      householdId: serializer.fromJson<String>(json['householdId']),
+      operation: serializer.fromJson<String>(json['operation']),
+      serverSequence: serializer.fromJson<BigInt>(json['serverSequence']),
+      tombstone: serializer.fromJson<bool>(json['tombstone']),
+      changedAt: serializer.fromJson<DateTime>(json['changedAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'entityType': serializer.toJson<String>(entityType),
+      'entityId': serializer.toJson<String>(entityId),
+      'householdId': serializer.toJson<String>(householdId),
+      'operation': serializer.toJson<String>(operation),
+      'serverSequence': serializer.toJson<BigInt>(serverSequence),
+      'tombstone': serializer.toJson<bool>(tombstone),
+      'changedAt': serializer.toJson<DateTime>(changedAt),
+    };
+  }
+
+  CachedSyncChange copyWith({
+    String? entityType,
+    String? entityId,
+    String? householdId,
+    String? operation,
+    BigInt? serverSequence,
+    bool? tombstone,
+    DateTime? changedAt,
+  }) => CachedSyncChange(
+    entityType: entityType ?? this.entityType,
+    entityId: entityId ?? this.entityId,
+    householdId: householdId ?? this.householdId,
+    operation: operation ?? this.operation,
+    serverSequence: serverSequence ?? this.serverSequence,
+    tombstone: tombstone ?? this.tombstone,
+    changedAt: changedAt ?? this.changedAt,
+  );
+  CachedSyncChange copyWithCompanion(CachedSyncChangesCompanion data) {
+    return CachedSyncChange(
+      entityType: data.entityType.present
+          ? data.entityType.value
+          : this.entityType,
+      entityId: data.entityId.present ? data.entityId.value : this.entityId,
+      householdId: data.householdId.present
+          ? data.householdId.value
+          : this.householdId,
+      operation: data.operation.present ? data.operation.value : this.operation,
+      serverSequence: data.serverSequence.present
+          ? data.serverSequence.value
+          : this.serverSequence,
+      tombstone: data.tombstone.present ? data.tombstone.value : this.tombstone,
+      changedAt: data.changedAt.present ? data.changedAt.value : this.changedAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('CachedSyncChange(')
+          ..write('entityType: $entityType, ')
+          ..write('entityId: $entityId, ')
+          ..write('householdId: $householdId, ')
+          ..write('operation: $operation, ')
+          ..write('serverSequence: $serverSequence, ')
+          ..write('tombstone: $tombstone, ')
+          ..write('changedAt: $changedAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    entityType,
+    entityId,
+    householdId,
+    operation,
+    serverSequence,
+    tombstone,
+    changedAt,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is CachedSyncChange &&
+          other.entityType == this.entityType &&
+          other.entityId == this.entityId &&
+          other.householdId == this.householdId &&
+          other.operation == this.operation &&
+          other.serverSequence == this.serverSequence &&
+          other.tombstone == this.tombstone &&
+          other.changedAt == this.changedAt);
+}
+
+class CachedSyncChangesCompanion extends UpdateCompanion<CachedSyncChange> {
+  final Value<String> entityType;
+  final Value<String> entityId;
+  final Value<String> householdId;
+  final Value<String> operation;
+  final Value<BigInt> serverSequence;
+  final Value<bool> tombstone;
+  final Value<DateTime> changedAt;
+  final Value<int> rowid;
+  const CachedSyncChangesCompanion({
+    this.entityType = const Value.absent(),
+    this.entityId = const Value.absent(),
+    this.householdId = const Value.absent(),
+    this.operation = const Value.absent(),
+    this.serverSequence = const Value.absent(),
+    this.tombstone = const Value.absent(),
+    this.changedAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  CachedSyncChangesCompanion.insert({
+    required String entityType,
+    required String entityId,
+    required String householdId,
+    required String operation,
+    required BigInt serverSequence,
+    this.tombstone = const Value.absent(),
+    required DateTime changedAt,
+    this.rowid = const Value.absent(),
+  }) : entityType = Value(entityType),
+       entityId = Value(entityId),
+       householdId = Value(householdId),
+       operation = Value(operation),
+       serverSequence = Value(serverSequence),
+       changedAt = Value(changedAt);
+  static Insertable<CachedSyncChange> custom({
+    Expression<String>? entityType,
+    Expression<String>? entityId,
+    Expression<String>? householdId,
+    Expression<String>? operation,
+    Expression<BigInt>? serverSequence,
+    Expression<bool>? tombstone,
+    Expression<DateTime>? changedAt,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (entityType != null) 'entity_type': entityType,
+      if (entityId != null) 'entity_id': entityId,
+      if (householdId != null) 'household_id': householdId,
+      if (operation != null) 'operation': operation,
+      if (serverSequence != null) 'server_sequence': serverSequence,
+      if (tombstone != null) 'tombstone': tombstone,
+      if (changedAt != null) 'changed_at': changedAt,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  CachedSyncChangesCompanion copyWith({
+    Value<String>? entityType,
+    Value<String>? entityId,
+    Value<String>? householdId,
+    Value<String>? operation,
+    Value<BigInt>? serverSequence,
+    Value<bool>? tombstone,
+    Value<DateTime>? changedAt,
+    Value<int>? rowid,
+  }) {
+    return CachedSyncChangesCompanion(
+      entityType: entityType ?? this.entityType,
+      entityId: entityId ?? this.entityId,
+      householdId: householdId ?? this.householdId,
+      operation: operation ?? this.operation,
+      serverSequence: serverSequence ?? this.serverSequence,
+      tombstone: tombstone ?? this.tombstone,
+      changedAt: changedAt ?? this.changedAt,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (entityType.present) {
+      map['entity_type'] = Variable<String>(entityType.value);
+    }
+    if (entityId.present) {
+      map['entity_id'] = Variable<String>(entityId.value);
+    }
+    if (householdId.present) {
+      map['household_id'] = Variable<String>(householdId.value);
+    }
+    if (operation.present) {
+      map['operation'] = Variable<String>(operation.value);
+    }
+    if (serverSequence.present) {
+      map['server_sequence'] = Variable<BigInt>(serverSequence.value);
+    }
+    if (tombstone.present) {
+      map['tombstone'] = Variable<bool>(tombstone.value);
+    }
+    if (changedAt.present) {
+      map['changed_at'] = Variable<DateTime>(changedAt.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('CachedSyncChangesCompanion(')
+          ..write('entityType: $entityType, ')
+          ..write('entityId: $entityId, ')
+          ..write('householdId: $householdId, ')
+          ..write('operation: $operation, ')
+          ..write('serverSequence: $serverSequence, ')
+          ..write('tombstone: $tombstone, ')
+          ..write('changedAt: $changedAt, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $SyncCursorsTable extends SyncCursors
+    with TableInfo<$SyncCursorsTable, SyncCursor> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $SyncCursorsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _householdIdMeta = const VerificationMeta(
+    'householdId',
+  );
+  @override
+  late final GeneratedColumn<String> householdId = GeneratedColumn<String>(
+    'household_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _cursorMeta = const VerificationMeta('cursor');
+  @override
+  late final GeneratedColumn<BigInt> cursor = GeneratedColumn<BigInt>(
+    'cursor',
+    aliasedName,
+    false,
+    type: DriftSqlType.bigInt,
+    requiredDuringInsert: false,
+    defaultValue: const CustomExpression<BigInt>('0'),
+  );
+  static const VerificationMeta _lastSuccessAtMeta = const VerificationMeta(
+    'lastSuccessAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> lastSuccessAt =
+      GeneratedColumn<DateTime>(
+        'last_success_at',
+        aliasedName,
+        true,
+        type: DriftSqlType.dateTime,
+        requiredDuringInsert: false,
+      );
+  @override
+  List<GeneratedColumn> get $columns => [householdId, cursor, lastSuccessAt];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'sync_cursors';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<SyncCursor> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('household_id')) {
+      context.handle(
+        _householdIdMeta,
+        householdId.isAcceptableOrUnknown(
+          data['household_id']!,
+          _householdIdMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_householdIdMeta);
+    }
+    if (data.containsKey('cursor')) {
+      context.handle(
+        _cursorMeta,
+        cursor.isAcceptableOrUnknown(data['cursor']!, _cursorMeta),
+      );
+    }
+    if (data.containsKey('last_success_at')) {
+      context.handle(
+        _lastSuccessAtMeta,
+        lastSuccessAt.isAcceptableOrUnknown(
+          data['last_success_at']!,
+          _lastSuccessAtMeta,
+        ),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {householdId};
+  @override
+  SyncCursor map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return SyncCursor(
+      householdId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}household_id'],
+      )!,
+      cursor: attachedDatabase.typeMapping.read(
+        DriftSqlType.bigInt,
+        data['${effectivePrefix}cursor'],
+      )!,
+      lastSuccessAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}last_success_at'],
+      ),
+    );
+  }
+
+  @override
+  $SyncCursorsTable createAlias(String alias) {
+    return $SyncCursorsTable(attachedDatabase, alias);
+  }
+}
+
+class SyncCursor extends DataClass implements Insertable<SyncCursor> {
+  final String householdId;
+  final BigInt cursor;
+  final DateTime? lastSuccessAt;
+  const SyncCursor({
+    required this.householdId,
+    required this.cursor,
+    this.lastSuccessAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['household_id'] = Variable<String>(householdId);
+    map['cursor'] = Variable<BigInt>(cursor);
+    if (!nullToAbsent || lastSuccessAt != null) {
+      map['last_success_at'] = Variable<DateTime>(lastSuccessAt);
+    }
+    return map;
+  }
+
+  SyncCursorsCompanion toCompanion(bool nullToAbsent) {
+    return SyncCursorsCompanion(
+      householdId: Value(householdId),
+      cursor: Value(cursor),
+      lastSuccessAt: lastSuccessAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(lastSuccessAt),
+    );
+  }
+
+  factory SyncCursor.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return SyncCursor(
+      householdId: serializer.fromJson<String>(json['householdId']),
+      cursor: serializer.fromJson<BigInt>(json['cursor']),
+      lastSuccessAt: serializer.fromJson<DateTime?>(json['lastSuccessAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'householdId': serializer.toJson<String>(householdId),
+      'cursor': serializer.toJson<BigInt>(cursor),
+      'lastSuccessAt': serializer.toJson<DateTime?>(lastSuccessAt),
+    };
+  }
+
+  SyncCursor copyWith({
+    String? householdId,
+    BigInt? cursor,
+    Value<DateTime?> lastSuccessAt = const Value.absent(),
+  }) => SyncCursor(
+    householdId: householdId ?? this.householdId,
+    cursor: cursor ?? this.cursor,
+    lastSuccessAt: lastSuccessAt.present
+        ? lastSuccessAt.value
+        : this.lastSuccessAt,
+  );
+  SyncCursor copyWithCompanion(SyncCursorsCompanion data) {
+    return SyncCursor(
+      householdId: data.householdId.present
+          ? data.householdId.value
+          : this.householdId,
+      cursor: data.cursor.present ? data.cursor.value : this.cursor,
+      lastSuccessAt: data.lastSuccessAt.present
+          ? data.lastSuccessAt.value
+          : this.lastSuccessAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('SyncCursor(')
+          ..write('householdId: $householdId, ')
+          ..write('cursor: $cursor, ')
+          ..write('lastSuccessAt: $lastSuccessAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(householdId, cursor, lastSuccessAt);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is SyncCursor &&
+          other.householdId == this.householdId &&
+          other.cursor == this.cursor &&
+          other.lastSuccessAt == this.lastSuccessAt);
+}
+
+class SyncCursorsCompanion extends UpdateCompanion<SyncCursor> {
+  final Value<String> householdId;
+  final Value<BigInt> cursor;
+  final Value<DateTime?> lastSuccessAt;
+  final Value<int> rowid;
+  const SyncCursorsCompanion({
+    this.householdId = const Value.absent(),
+    this.cursor = const Value.absent(),
+    this.lastSuccessAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  SyncCursorsCompanion.insert({
+    required String householdId,
+    this.cursor = const Value.absent(),
+    this.lastSuccessAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  }) : householdId = Value(householdId);
+  static Insertable<SyncCursor> custom({
+    Expression<String>? householdId,
+    Expression<BigInt>? cursor,
+    Expression<DateTime>? lastSuccessAt,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (householdId != null) 'household_id': householdId,
+      if (cursor != null) 'cursor': cursor,
+      if (lastSuccessAt != null) 'last_success_at': lastSuccessAt,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  SyncCursorsCompanion copyWith({
+    Value<String>? householdId,
+    Value<BigInt>? cursor,
+    Value<DateTime?>? lastSuccessAt,
+    Value<int>? rowid,
+  }) {
+    return SyncCursorsCompanion(
+      householdId: householdId ?? this.householdId,
+      cursor: cursor ?? this.cursor,
+      lastSuccessAt: lastSuccessAt ?? this.lastSuccessAt,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (householdId.present) {
+      map['household_id'] = Variable<String>(householdId.value);
+    }
+    if (cursor.present) {
+      map['cursor'] = Variable<BigInt>(cursor.value);
+    }
+    if (lastSuccessAt.present) {
+      map['last_success_at'] = Variable<DateTime>(lastSuccessAt.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('SyncCursorsCompanion(')
+          ..write('householdId: $householdId, ')
+          ..write('cursor: $cursor, ')
+          ..write('lastSuccessAt: $lastSuccessAt, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $SyncEventsTable extends SyncEvents
+    with TableInfo<$SyncEventsTable, SyncEvent> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $SyncEventsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _eventTypeMeta = const VerificationMeta(
+    'eventType',
+  );
+  @override
+  late final GeneratedColumn<String> eventType = GeneratedColumn<String>(
+    'event_type',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _operationMeta = const VerificationMeta(
+    'operation',
+  );
+  @override
+  late final GeneratedColumn<String> operation = GeneratedColumn<String>(
+    'operation',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _errorCodeMeta = const VerificationMeta(
+    'errorCode',
+  );
+  @override
+  late final GeneratedColumn<String> errorCode = GeneratedColumn<String>(
+    'error_code',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _occurredAtMeta = const VerificationMeta(
+    'occurredAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> occurredAt = GeneratedColumn<DateTime>(
+    'occurred_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: currentDateAndTime,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    eventType,
+    operation,
+    errorCode,
+    occurredAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'sync_events';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<SyncEvent> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('event_type')) {
+      context.handle(
+        _eventTypeMeta,
+        eventType.isAcceptableOrUnknown(data['event_type']!, _eventTypeMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_eventTypeMeta);
+    }
+    if (data.containsKey('operation')) {
+      context.handle(
+        _operationMeta,
+        operation.isAcceptableOrUnknown(data['operation']!, _operationMeta),
+      );
+    }
+    if (data.containsKey('error_code')) {
+      context.handle(
+        _errorCodeMeta,
+        errorCode.isAcceptableOrUnknown(data['error_code']!, _errorCodeMeta),
+      );
+    }
+    if (data.containsKey('occurred_at')) {
+      context.handle(
+        _occurredAtMeta,
+        occurredAt.isAcceptableOrUnknown(data['occurred_at']!, _occurredAtMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  SyncEvent map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return SyncEvent(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      eventType: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}event_type'],
+      )!,
+      operation: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}operation'],
+      ),
+      errorCode: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}error_code'],
+      ),
+      occurredAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}occurred_at'],
+      )!,
+    );
+  }
+
+  @override
+  $SyncEventsTable createAlias(String alias) {
+    return $SyncEventsTable(attachedDatabase, alias);
+  }
+}
+
+class SyncEvent extends DataClass implements Insertable<SyncEvent> {
+  final int id;
+  final String eventType;
+  final String? operation;
+  final String? errorCode;
+  final DateTime occurredAt;
+  const SyncEvent({
+    required this.id,
+    required this.eventType,
+    this.operation,
+    this.errorCode,
+    required this.occurredAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['event_type'] = Variable<String>(eventType);
+    if (!nullToAbsent || operation != null) {
+      map['operation'] = Variable<String>(operation);
+    }
+    if (!nullToAbsent || errorCode != null) {
+      map['error_code'] = Variable<String>(errorCode);
+    }
+    map['occurred_at'] = Variable<DateTime>(occurredAt);
+    return map;
+  }
+
+  SyncEventsCompanion toCompanion(bool nullToAbsent) {
+    return SyncEventsCompanion(
+      id: Value(id),
+      eventType: Value(eventType),
+      operation: operation == null && nullToAbsent
+          ? const Value.absent()
+          : Value(operation),
+      errorCode: errorCode == null && nullToAbsent
+          ? const Value.absent()
+          : Value(errorCode),
+      occurredAt: Value(occurredAt),
+    );
+  }
+
+  factory SyncEvent.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return SyncEvent(
+      id: serializer.fromJson<int>(json['id']),
+      eventType: serializer.fromJson<String>(json['eventType']),
+      operation: serializer.fromJson<String?>(json['operation']),
+      errorCode: serializer.fromJson<String?>(json['errorCode']),
+      occurredAt: serializer.fromJson<DateTime>(json['occurredAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'eventType': serializer.toJson<String>(eventType),
+      'operation': serializer.toJson<String?>(operation),
+      'errorCode': serializer.toJson<String?>(errorCode),
+      'occurredAt': serializer.toJson<DateTime>(occurredAt),
+    };
+  }
+
+  SyncEvent copyWith({
+    int? id,
+    String? eventType,
+    Value<String?> operation = const Value.absent(),
+    Value<String?> errorCode = const Value.absent(),
+    DateTime? occurredAt,
+  }) => SyncEvent(
+    id: id ?? this.id,
+    eventType: eventType ?? this.eventType,
+    operation: operation.present ? operation.value : this.operation,
+    errorCode: errorCode.present ? errorCode.value : this.errorCode,
+    occurredAt: occurredAt ?? this.occurredAt,
+  );
+  SyncEvent copyWithCompanion(SyncEventsCompanion data) {
+    return SyncEvent(
+      id: data.id.present ? data.id.value : this.id,
+      eventType: data.eventType.present ? data.eventType.value : this.eventType,
+      operation: data.operation.present ? data.operation.value : this.operation,
+      errorCode: data.errorCode.present ? data.errorCode.value : this.errorCode,
+      occurredAt: data.occurredAt.present
+          ? data.occurredAt.value
+          : this.occurredAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('SyncEvent(')
+          ..write('id: $id, ')
+          ..write('eventType: $eventType, ')
+          ..write('operation: $operation, ')
+          ..write('errorCode: $errorCode, ')
+          ..write('occurredAt: $occurredAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode =>
+      Object.hash(id, eventType, operation, errorCode, occurredAt);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is SyncEvent &&
+          other.id == this.id &&
+          other.eventType == this.eventType &&
+          other.operation == this.operation &&
+          other.errorCode == this.errorCode &&
+          other.occurredAt == this.occurredAt);
+}
+
+class SyncEventsCompanion extends UpdateCompanion<SyncEvent> {
+  final Value<int> id;
+  final Value<String> eventType;
+  final Value<String?> operation;
+  final Value<String?> errorCode;
+  final Value<DateTime> occurredAt;
+  const SyncEventsCompanion({
+    this.id = const Value.absent(),
+    this.eventType = const Value.absent(),
+    this.operation = const Value.absent(),
+    this.errorCode = const Value.absent(),
+    this.occurredAt = const Value.absent(),
+  });
+  SyncEventsCompanion.insert({
+    this.id = const Value.absent(),
+    required String eventType,
+    this.operation = const Value.absent(),
+    this.errorCode = const Value.absent(),
+    this.occurredAt = const Value.absent(),
+  }) : eventType = Value(eventType);
+  static Insertable<SyncEvent> custom({
+    Expression<int>? id,
+    Expression<String>? eventType,
+    Expression<String>? operation,
+    Expression<String>? errorCode,
+    Expression<DateTime>? occurredAt,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (eventType != null) 'event_type': eventType,
+      if (operation != null) 'operation': operation,
+      if (errorCode != null) 'error_code': errorCode,
+      if (occurredAt != null) 'occurred_at': occurredAt,
+    });
+  }
+
+  SyncEventsCompanion copyWith({
+    Value<int>? id,
+    Value<String>? eventType,
+    Value<String?>? operation,
+    Value<String?>? errorCode,
+    Value<DateTime>? occurredAt,
+  }) {
+    return SyncEventsCompanion(
+      id: id ?? this.id,
+      eventType: eventType ?? this.eventType,
+      operation: operation ?? this.operation,
+      errorCode: errorCode ?? this.errorCode,
+      occurredAt: occurredAt ?? this.occurredAt,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (eventType.present) {
+      map['event_type'] = Variable<String>(eventType.value);
+    }
+    if (operation.present) {
+      map['operation'] = Variable<String>(operation.value);
+    }
+    if (errorCode.present) {
+      map['error_code'] = Variable<String>(errorCode.value);
+    }
+    if (occurredAt.present) {
+      map['occurred_at'] = Variable<DateTime>(occurredAt.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('SyncEventsCompanion(')
+          ..write('id: $id, ')
+          ..write('eventType: $eventType, ')
+          ..write('operation: $operation, ')
+          ..write('errorCode: $errorCode, ')
+          ..write('occurredAt: $occurredAt')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
@@ -1215,6 +2332,10 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final $PendingMutationsTable pendingMutations = $PendingMutationsTable(
     this,
   );
+  late final $CachedSyncChangesTable cachedSyncChanges =
+      $CachedSyncChangesTable(this);
+  late final $SyncCursorsTable syncCursors = $SyncCursorsTable(this);
+  late final $SyncEventsTable syncEvents = $SyncEventsTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -1222,6 +2343,9 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   List<DatabaseSchemaEntity> get allSchemaEntities => [
     localWallets,
     pendingMutations,
+    cachedSyncChanges,
+    syncCursors,
+    syncEvents,
   ];
 }
 
@@ -1820,6 +2944,622 @@ typedef $$PendingMutationsTableProcessedTableManager =
       PendingMutation,
       PrefetchHooks Function()
     >;
+typedef $$CachedSyncChangesTableCreateCompanionBuilder =
+    CachedSyncChangesCompanion Function({
+      required String entityType,
+      required String entityId,
+      required String householdId,
+      required String operation,
+      required BigInt serverSequence,
+      Value<bool> tombstone,
+      required DateTime changedAt,
+      Value<int> rowid,
+    });
+typedef $$CachedSyncChangesTableUpdateCompanionBuilder =
+    CachedSyncChangesCompanion Function({
+      Value<String> entityType,
+      Value<String> entityId,
+      Value<String> householdId,
+      Value<String> operation,
+      Value<BigInt> serverSequence,
+      Value<bool> tombstone,
+      Value<DateTime> changedAt,
+      Value<int> rowid,
+    });
+
+class $$CachedSyncChangesTableFilterComposer
+    extends Composer<_$AppDatabase, $CachedSyncChangesTable> {
+  $$CachedSyncChangesTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get entityType => $composableBuilder(
+    column: $table.entityType,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get entityId => $composableBuilder(
+    column: $table.entityId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get householdId => $composableBuilder(
+    column: $table.householdId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get operation => $composableBuilder(
+    column: $table.operation,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<BigInt> get serverSequence => $composableBuilder(
+    column: $table.serverSequence,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get tombstone => $composableBuilder(
+    column: $table.tombstone,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get changedAt => $composableBuilder(
+    column: $table.changedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$CachedSyncChangesTableOrderingComposer
+    extends Composer<_$AppDatabase, $CachedSyncChangesTable> {
+  $$CachedSyncChangesTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get entityType => $composableBuilder(
+    column: $table.entityType,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get entityId => $composableBuilder(
+    column: $table.entityId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get householdId => $composableBuilder(
+    column: $table.householdId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get operation => $composableBuilder(
+    column: $table.operation,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<BigInt> get serverSequence => $composableBuilder(
+    column: $table.serverSequence,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get tombstone => $composableBuilder(
+    column: $table.tombstone,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get changedAt => $composableBuilder(
+    column: $table.changedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$CachedSyncChangesTableAnnotationComposer
+    extends Composer<_$AppDatabase, $CachedSyncChangesTable> {
+  $$CachedSyncChangesTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get entityType => $composableBuilder(
+    column: $table.entityType,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get entityId =>
+      $composableBuilder(column: $table.entityId, builder: (column) => column);
+
+  GeneratedColumn<String> get householdId => $composableBuilder(
+    column: $table.householdId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get operation =>
+      $composableBuilder(column: $table.operation, builder: (column) => column);
+
+  GeneratedColumn<BigInt> get serverSequence => $composableBuilder(
+    column: $table.serverSequence,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<bool> get tombstone =>
+      $composableBuilder(column: $table.tombstone, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get changedAt =>
+      $composableBuilder(column: $table.changedAt, builder: (column) => column);
+}
+
+class $$CachedSyncChangesTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $CachedSyncChangesTable,
+          CachedSyncChange,
+          $$CachedSyncChangesTableFilterComposer,
+          $$CachedSyncChangesTableOrderingComposer,
+          $$CachedSyncChangesTableAnnotationComposer,
+          $$CachedSyncChangesTableCreateCompanionBuilder,
+          $$CachedSyncChangesTableUpdateCompanionBuilder,
+          (
+            CachedSyncChange,
+            BaseReferences<
+              _$AppDatabase,
+              $CachedSyncChangesTable,
+              CachedSyncChange
+            >,
+          ),
+          CachedSyncChange,
+          PrefetchHooks Function()
+        > {
+  $$CachedSyncChangesTableTableManager(
+    _$AppDatabase db,
+    $CachedSyncChangesTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$CachedSyncChangesTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$CachedSyncChangesTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$CachedSyncChangesTableAnnotationComposer(
+                $db: db,
+                $table: table,
+              ),
+          updateCompanionCallback:
+              ({
+                Value<String> entityType = const Value.absent(),
+                Value<String> entityId = const Value.absent(),
+                Value<String> householdId = const Value.absent(),
+                Value<String> operation = const Value.absent(),
+                Value<BigInt> serverSequence = const Value.absent(),
+                Value<bool> tombstone = const Value.absent(),
+                Value<DateTime> changedAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => CachedSyncChangesCompanion(
+                entityType: entityType,
+                entityId: entityId,
+                householdId: householdId,
+                operation: operation,
+                serverSequence: serverSequence,
+                tombstone: tombstone,
+                changedAt: changedAt,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String entityType,
+                required String entityId,
+                required String householdId,
+                required String operation,
+                required BigInt serverSequence,
+                Value<bool> tombstone = const Value.absent(),
+                required DateTime changedAt,
+                Value<int> rowid = const Value.absent(),
+              }) => CachedSyncChangesCompanion.insert(
+                entityType: entityType,
+                entityId: entityId,
+                householdId: householdId,
+                operation: operation,
+                serverSequence: serverSequence,
+                tombstone: tombstone,
+                changedAt: changedAt,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$CachedSyncChangesTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $CachedSyncChangesTable,
+      CachedSyncChange,
+      $$CachedSyncChangesTableFilterComposer,
+      $$CachedSyncChangesTableOrderingComposer,
+      $$CachedSyncChangesTableAnnotationComposer,
+      $$CachedSyncChangesTableCreateCompanionBuilder,
+      $$CachedSyncChangesTableUpdateCompanionBuilder,
+      (
+        CachedSyncChange,
+        BaseReferences<
+          _$AppDatabase,
+          $CachedSyncChangesTable,
+          CachedSyncChange
+        >,
+      ),
+      CachedSyncChange,
+      PrefetchHooks Function()
+    >;
+typedef $$SyncCursorsTableCreateCompanionBuilder =
+    SyncCursorsCompanion Function({
+      required String householdId,
+      Value<BigInt> cursor,
+      Value<DateTime?> lastSuccessAt,
+      Value<int> rowid,
+    });
+typedef $$SyncCursorsTableUpdateCompanionBuilder =
+    SyncCursorsCompanion Function({
+      Value<String> householdId,
+      Value<BigInt> cursor,
+      Value<DateTime?> lastSuccessAt,
+      Value<int> rowid,
+    });
+
+class $$SyncCursorsTableFilterComposer
+    extends Composer<_$AppDatabase, $SyncCursorsTable> {
+  $$SyncCursorsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get householdId => $composableBuilder(
+    column: $table.householdId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<BigInt> get cursor => $composableBuilder(
+    column: $table.cursor,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get lastSuccessAt => $composableBuilder(
+    column: $table.lastSuccessAt,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$SyncCursorsTableOrderingComposer
+    extends Composer<_$AppDatabase, $SyncCursorsTable> {
+  $$SyncCursorsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get householdId => $composableBuilder(
+    column: $table.householdId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<BigInt> get cursor => $composableBuilder(
+    column: $table.cursor,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get lastSuccessAt => $composableBuilder(
+    column: $table.lastSuccessAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$SyncCursorsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $SyncCursorsTable> {
+  $$SyncCursorsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get householdId => $composableBuilder(
+    column: $table.householdId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<BigInt> get cursor =>
+      $composableBuilder(column: $table.cursor, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get lastSuccessAt => $composableBuilder(
+    column: $table.lastSuccessAt,
+    builder: (column) => column,
+  );
+}
+
+class $$SyncCursorsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $SyncCursorsTable,
+          SyncCursor,
+          $$SyncCursorsTableFilterComposer,
+          $$SyncCursorsTableOrderingComposer,
+          $$SyncCursorsTableAnnotationComposer,
+          $$SyncCursorsTableCreateCompanionBuilder,
+          $$SyncCursorsTableUpdateCompanionBuilder,
+          (
+            SyncCursor,
+            BaseReferences<_$AppDatabase, $SyncCursorsTable, SyncCursor>,
+          ),
+          SyncCursor,
+          PrefetchHooks Function()
+        > {
+  $$SyncCursorsTableTableManager(_$AppDatabase db, $SyncCursorsTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$SyncCursorsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$SyncCursorsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$SyncCursorsTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<String> householdId = const Value.absent(),
+                Value<BigInt> cursor = const Value.absent(),
+                Value<DateTime?> lastSuccessAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => SyncCursorsCompanion(
+                householdId: householdId,
+                cursor: cursor,
+                lastSuccessAt: lastSuccessAt,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String householdId,
+                Value<BigInt> cursor = const Value.absent(),
+                Value<DateTime?> lastSuccessAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => SyncCursorsCompanion.insert(
+                householdId: householdId,
+                cursor: cursor,
+                lastSuccessAt: lastSuccessAt,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$SyncCursorsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $SyncCursorsTable,
+      SyncCursor,
+      $$SyncCursorsTableFilterComposer,
+      $$SyncCursorsTableOrderingComposer,
+      $$SyncCursorsTableAnnotationComposer,
+      $$SyncCursorsTableCreateCompanionBuilder,
+      $$SyncCursorsTableUpdateCompanionBuilder,
+      (
+        SyncCursor,
+        BaseReferences<_$AppDatabase, $SyncCursorsTable, SyncCursor>,
+      ),
+      SyncCursor,
+      PrefetchHooks Function()
+    >;
+typedef $$SyncEventsTableCreateCompanionBuilder =
+    SyncEventsCompanion Function({
+      Value<int> id,
+      required String eventType,
+      Value<String?> operation,
+      Value<String?> errorCode,
+      Value<DateTime> occurredAt,
+    });
+typedef $$SyncEventsTableUpdateCompanionBuilder =
+    SyncEventsCompanion Function({
+      Value<int> id,
+      Value<String> eventType,
+      Value<String?> operation,
+      Value<String?> errorCode,
+      Value<DateTime> occurredAt,
+    });
+
+class $$SyncEventsTableFilterComposer
+    extends Composer<_$AppDatabase, $SyncEventsTable> {
+  $$SyncEventsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get eventType => $composableBuilder(
+    column: $table.eventType,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get operation => $composableBuilder(
+    column: $table.operation,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get errorCode => $composableBuilder(
+    column: $table.errorCode,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get occurredAt => $composableBuilder(
+    column: $table.occurredAt,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$SyncEventsTableOrderingComposer
+    extends Composer<_$AppDatabase, $SyncEventsTable> {
+  $$SyncEventsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get eventType => $composableBuilder(
+    column: $table.eventType,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get operation => $composableBuilder(
+    column: $table.operation,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get errorCode => $composableBuilder(
+    column: $table.errorCode,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get occurredAt => $composableBuilder(
+    column: $table.occurredAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$SyncEventsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $SyncEventsTable> {
+  $$SyncEventsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get eventType =>
+      $composableBuilder(column: $table.eventType, builder: (column) => column);
+
+  GeneratedColumn<String> get operation =>
+      $composableBuilder(column: $table.operation, builder: (column) => column);
+
+  GeneratedColumn<String> get errorCode =>
+      $composableBuilder(column: $table.errorCode, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get occurredAt => $composableBuilder(
+    column: $table.occurredAt,
+    builder: (column) => column,
+  );
+}
+
+class $$SyncEventsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $SyncEventsTable,
+          SyncEvent,
+          $$SyncEventsTableFilterComposer,
+          $$SyncEventsTableOrderingComposer,
+          $$SyncEventsTableAnnotationComposer,
+          $$SyncEventsTableCreateCompanionBuilder,
+          $$SyncEventsTableUpdateCompanionBuilder,
+          (
+            SyncEvent,
+            BaseReferences<_$AppDatabase, $SyncEventsTable, SyncEvent>,
+          ),
+          SyncEvent,
+          PrefetchHooks Function()
+        > {
+  $$SyncEventsTableTableManager(_$AppDatabase db, $SyncEventsTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$SyncEventsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$SyncEventsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$SyncEventsTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<String> eventType = const Value.absent(),
+                Value<String?> operation = const Value.absent(),
+                Value<String?> errorCode = const Value.absent(),
+                Value<DateTime> occurredAt = const Value.absent(),
+              }) => SyncEventsCompanion(
+                id: id,
+                eventType: eventType,
+                operation: operation,
+                errorCode: errorCode,
+                occurredAt: occurredAt,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                required String eventType,
+                Value<String?> operation = const Value.absent(),
+                Value<String?> errorCode = const Value.absent(),
+                Value<DateTime> occurredAt = const Value.absent(),
+              }) => SyncEventsCompanion.insert(
+                id: id,
+                eventType: eventType,
+                operation: operation,
+                errorCode: errorCode,
+                occurredAt: occurredAt,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$SyncEventsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $SyncEventsTable,
+      SyncEvent,
+      $$SyncEventsTableFilterComposer,
+      $$SyncEventsTableOrderingComposer,
+      $$SyncEventsTableAnnotationComposer,
+      $$SyncEventsTableCreateCompanionBuilder,
+      $$SyncEventsTableUpdateCompanionBuilder,
+      (SyncEvent, BaseReferences<_$AppDatabase, $SyncEventsTable, SyncEvent>),
+      SyncEvent,
+      PrefetchHooks Function()
+    >;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
@@ -1828,4 +3568,10 @@ class $AppDatabaseManager {
       $$LocalWalletsTableTableManager(_db, _db.localWallets);
   $$PendingMutationsTableTableManager get pendingMutations =>
       $$PendingMutationsTableTableManager(_db, _db.pendingMutations);
+  $$CachedSyncChangesTableTableManager get cachedSyncChanges =>
+      $$CachedSyncChangesTableTableManager(_db, _db.cachedSyncChanges);
+  $$SyncCursorsTableTableManager get syncCursors =>
+      $$SyncCursorsTableTableManager(_db, _db.syncCursors);
+  $$SyncEventsTableTableManager get syncEvents =>
+      $$SyncEventsTableTableManager(_db, _db.syncEvents);
 }

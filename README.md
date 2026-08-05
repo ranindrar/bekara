@@ -8,7 +8,7 @@ Aplikasi Flutter offline-capable untuk pencatatan keuangan suami–istri. Drift/
 
 ## Status
 
-Fase 1 pencatatan dasar selesai secara kode: autentikasi dan household onboarding, dompet, kategori, income/expense, transfer internal, dashboard, laporan kategori, reversal, dan rekonsiliasi. Verifikasi operasional dua akun dan perangkat nyata dicatat di [implementation status](docs/implementation-status.md).
+Fase 2 cash-flow selesai secara kode: periode dan locking, koreksi ter-audit, budget, soft locked funds, batas aman harian, tagihan rutin, sinkronisasi, backup JSON, dan export CSV. Verifikasi operasional dua akun/perangkat dan restore project uji dicatat di [implementation status](docs/implementation-status.md).
 
 ## Menjalankan
 

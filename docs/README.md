@@ -8,6 +8,7 @@
 - [Ledger technical specification](ledger-technical-spec.md)
 - [Database schema](database-schema.md)
 - [Phase 2 tracker](phase-2-tracker.md)
+- [API specification Phase 2](api-spec-v2.md)
 - [Development learning guide](development-learning-guide.md)
 - [Collaboration and testing workflow](collaboration-and-testing-workflow.md)
 - [Implementation status](implementation-status.md)

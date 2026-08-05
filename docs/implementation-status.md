@@ -1,6 +1,6 @@
 # Implementation Status
 
-Terakhir diverifikasi: 5 Agustus 2026.
+Terakhir diverifikasi: 6 Agustus 2026.
 
 ## Foundation — 4 Agustus 2026
 
@@ -87,3 +87,25 @@ Status `PENDING OPS` bukan implementasi aplikasi yang belum dibuat, tetapi gate 
 | Two-account behavioral test | READY | Checklist tersedia; masih membutuhkan dua akun remote terkonfirmasi |
 
 Migration hardening `202608060001_phase1_security_hardening.sql` sudah diterapkan ke remote Supabase.
+
+## Fase 2 — implementasi kode selesai 6 Agustus 2026
+
+| Area | Status | Hasil |
+|---|---|---|
+| Periode personal/household | DONE | Cycle 1–31, leap year, review, manual lock, dan auto-lock dua siklus |
+| Koreksi setelah lock | DONE | Reversal/pengganti otomatis; laporan mempertahankan total saat tutup dan daftar koreksi |
+| Budget | DONE | Personal/household/category, progress, threshold, proyeksi, dan anti-double-count |
+| Dana terkunci | DONE | Soft lock per wallet, available balance, release, audit, dan mutation guard |
+| Forecast | DONE | Saldo kas, dana terkunci, kebutuhan rutin, saldo bebas, batas aman harian, dan health status |
+| Tagihan rutin | DONE | Weekly/monthly, month-end clamp, konfirmasi pembayaran, skip, dan reschedule |
+| Backdate transaksi | DONE | Tanggal transaksi lampau dapat dipilih selama periodenya terbuka |
+| Offline/sync | DONE CODE | Drift v2, pending queue, cursor, tombstone, retry, conflict, dan metrik aman |
+| Backup/export | DONE CODE | Export remote, JSON checksum, restore cache idempotent, dan CSV privacy-aware |
+| Migration remote | DONE | Migration `202608060002` sampai `202608060007` diterapkan dan remote up-to-date |
+| Flutter verification | PASS | Analyzer tanpa issue, 20 test lulus, debug APK berhasil dibangun |
+| PostgreSQL verification | PASS | Database lint bersih dan 32 assertion pgTAP lulus pada remote |
+| Android emulator smoke test | PASS | APK terkonfigurasi terpasang dan layar Ringkasan/Cash Flow berhasil dimuat pada Pixel 9 API emulator |
+| Two-account/two-device test | PENDING OPS | Memerlukan dua akun terkonfirmasi dan dua perangkat/emulator aktif |
+| Full restore project uji | PENDING OPS | Export/checksum/restore cache teruji; restore end-to-end perlu project uji terpisah |
+
+Implementasi Fase 2 selesai secara kode. Distribusi tester tetap menunggu behavioral test dua akun, dua perangkat, dan latihan restore pada project uji. Detail per task ada di [phase-2 tracker](phase-2-tracker.md).

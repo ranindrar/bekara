@@ -49,6 +49,12 @@ class FinanceValidation {
     if (message.contains('IDEMPOTENCY_CONFLICT')) {
       return 'Permintaan duplikat memiliki data berbeda.';
     }
+    if (message.contains('PERIOD_LOCKED')) {
+      return 'Periode transaksi sudah dikunci. Gunakan menu koreksi.';
+    }
+    if (message.contains('LOCKED_FUNDS_IN_USE')) {
+      return 'Saldo ini dialokasikan sebagai dana terkunci. Lepaskan alokasinya sebelum digunakan.';
+    }
     if (message.contains('FORBIDDEN')) {
       return 'Anda tidak memiliki izin untuk aksi ini.';
     }

@@ -36,11 +36,62 @@ class PendingMutations extends Table {
   Set<Column<Object>> get primaryKey => {clientReferenceId};
 }
 
-@DriftDatabase(tables: [LocalWallets, PendingMutations])
+class CachedSyncChanges extends Table {
+  TextColumn get entityType => text()();
+  TextColumn get entityId => text()();
+  TextColumn get householdId => text()();
+  TextColumn get operation => text()();
+  Int64Column get serverSequence => int64()();
+  BoolColumn get tombstone => boolean().withDefault(const Constant(false))();
+  DateTimeColumn get changedAt => dateTime()();
+
+  @override
+  Set<Column<Object>> get primaryKey => {entityType, entityId};
+}
+
+class SyncCursors extends Table {
+  TextColumn get householdId => text()();
+  Int64Column get cursor =>
+      int64().withDefault(const CustomExpression<BigInt>('0'))();
+  DateTimeColumn get lastSuccessAt => dateTime().nullable()();
+
+  @override
+  Set<Column<Object>> get primaryKey => {householdId};
+}
+
+class SyncEvents extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  TextColumn get eventType => text()();
+  TextColumn get operation => text().nullable()();
+  TextColumn get errorCode => text().nullable()();
+  DateTimeColumn get occurredAt => dateTime().withDefault(currentDateAndTime)();
+}
+
+@DriftDatabase(
+  tables: [
+    LocalWallets,
+    PendingMutations,
+    CachedSyncChanges,
+    SyncCursors,
+    SyncEvents,
+  ],
+)
 class AppDatabase extends _$AppDatabase {
   AppDatabase([QueryExecutor? executor])
     : super(executor ?? driftDatabase(name: 'bekara'));
 
   @override
-  int get schemaVersion => 1;
+  int get schemaVersion => 2;
+
+  @override
+  MigrationStrategy get migration => MigrationStrategy(
+    onCreate: (migrator) => migrator.createAll(),
+    onUpgrade: (migrator, from, to) async {
+      if (from < 2) {
+        await migrator.createTable(cachedSyncChanges);
+        await migrator.createTable(syncCursors);
+        await migrator.createTable(syncEvents);
+      }
+    },
+  );
 }

@@ -37,6 +37,14 @@ void main() {
         FinanceValidation.friendlyError(Exception('secret database detail')),
         isNot(contains('secret')),
       );
+      expect(
+        FinanceValidation.friendlyError(Exception('PERIOD_LOCKED')),
+        contains('dikunci'),
+      );
+      expect(
+        FinanceValidation.friendlyError(Exception('LOCKED_FUNDS_IN_USE')),
+        contains('dana terkunci'),
+      );
     });
   });
 }

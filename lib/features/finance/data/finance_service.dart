@@ -1,12 +1,17 @@
+import 'dart:convert';
+
+import 'package:drift/drift.dart';
 import 'package:intl/intl.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:uuid/uuid.dart';
 
 import '../domain/finance_validation.dart';
+import '../../../core/database/app_database.dart';
 
 class FinanceService {
-  FinanceService(this.client);
+  FinanceService(this.client, [this.database]);
   final SupabaseClient client;
+  final AppDatabase? database;
   static const _uuid = Uuid();
 
   Future<List<Map<String, dynamic>>> wallets() => _list('list_wallets');
@@ -79,24 +84,26 @@ class FinanceService {
     required String description,
     required String scope,
     required String privacyMode,
+    required DateTime transactionDate,
   }) async {
-    await client.rpc(
-      'post_transaction',
-      params: {
-        'payload': {
-          'clientReferenceId': _uuid.v4(),
-          'walletId': walletId,
-          'categoryId': categoryId,
-          'kind': kind,
-          'amount': FinanceValidation.normalizeAmount(amount),
-          'description': description.trim(),
-          'transactionDate': DateFormat('yyyy-MM-dd').format(DateTime.now()),
-          'scope': scope,
-          'privacyMode': scope == 'HOUSEHOLD'
-              ? 'HOUSEHOLD_VISIBLE'
-              : privacyMode,
-        },
+    final reference = _uuid.v4();
+    final params = {
+      'payload': {
+        'clientReferenceId': reference,
+        'walletId': walletId,
+        'categoryId': categoryId,
+        'kind': kind,
+        'amount': FinanceValidation.normalizeAmount(amount),
+        'description': description.trim(),
+        'transactionDate': DateFormat('yyyy-MM-dd').format(transactionDate),
+        'scope': scope,
+        'privacyMode': scope == 'HOUSEHOLD' ? 'HOUSEHOLD_VISIBLE' : privacyMode,
       },
+    };
+    await _financialRpc(
+      function: 'post_transaction',
+      params: params,
+      reference: reference,
     );
   }
 
@@ -105,19 +112,23 @@ class FinanceService {
     required String destinationWalletId,
     required String amount,
     required String description,
+    required DateTime transactionDate,
   }) async {
-    await client.rpc(
-      'post_transfer',
-      params: {
-        'payload': {
-          'clientReferenceId': _uuid.v4(),
-          'sourceWalletId': sourceWalletId,
-          'destinationWalletId': destinationWalletId,
-          'amount': FinanceValidation.normalizeAmount(amount),
-          'description': description.trim(),
-          'transactionDate': DateFormat('yyyy-MM-dd').format(DateTime.now()),
-        },
+    final reference = _uuid.v4();
+    final params = {
+      'payload': {
+        'clientReferenceId': reference,
+        'sourceWalletId': sourceWalletId,
+        'destinationWalletId': destinationWalletId,
+        'amount': FinanceValidation.normalizeAmount(amount),
+        'description': description.trim(),
+        'transactionDate': DateFormat('yyyy-MM-dd').format(transactionDate),
       },
+    };
+    await _financialRpc(
+      function: 'post_transfer',
+      params: params,
+      reference: reference,
     );
   }
 
@@ -170,5 +181,37 @@ class FinanceService {
     return (value as List)
         .map((item) => Map<String, dynamic>.from(item as Map))
         .toList();
+  }
+
+  Future<void> _financialRpc({
+    required String function,
+    required Map<String, dynamic> params,
+    required String reference,
+  }) async {
+    try {
+      await client.rpc(function, params: params);
+    } catch (error) {
+      if (database == null || !_looksOffline(error)) rethrow;
+      await database!
+          .into(database!.pendingMutations)
+          .insertOnConflictUpdate(
+            PendingMutationsCompanion.insert(
+              clientReferenceId: reference,
+              operation: function,
+              payloadJson: jsonEncode({'params': params}),
+              syncStatus: const Value('PENDING_SYNC'),
+              updatedAt: Value(DateTime.now().toUtc()),
+            ),
+          );
+    }
+  }
+
+  static bool _looksOffline(Object error) {
+    final value = error.toString().toLowerCase();
+    return value.contains('socketexception') ||
+        value.contains('clientexception') ||
+        value.contains('failed host lookup') ||
+        value.contains('network') ||
+        value.contains('connection');
   }
 }
