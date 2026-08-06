@@ -8,6 +8,8 @@ import 'package:uuid/uuid.dart';
 import '../domain/finance_validation.dart';
 import '../../../core/database/app_database.dart';
 
+enum FinancialMutationResult { committed, queued }
+
 class FinanceService {
   FinanceService(this.client, [this.database]);
   final SupabaseClient client;
@@ -21,6 +23,20 @@ class FinanceService {
       _list('list_transactions');
   Future<List<Map<String, dynamic>>> categoryReport() =>
       _list('report_category');
+
+  Future<int> pendingMutationCount() async {
+    if (database == null) return 0;
+    final rows =
+        await (database!.select(database!.pendingMutations)..where(
+              (row) => row.syncStatus.isIn([
+                'PENDING_SYNC',
+                'SYNC_FAILED',
+                'CONFLICT',
+              ]),
+            ))
+            .get();
+    return rows.length;
+  }
 
   Future<Map<String, dynamic>> dashboard() async {
     final value = await client.rpc('dashboard_summary');
@@ -76,7 +92,7 @@ class FinanceService {
     );
   }
 
-  Future<void> postTransaction({
+  Future<FinancialMutationResult> postTransaction({
     required String walletId,
     required String categoryId,
     required String kind,
@@ -100,14 +116,14 @@ class FinanceService {
         'privacyMode': scope == 'HOUSEHOLD' ? 'HOUSEHOLD_VISIBLE' : privacyMode,
       },
     };
-    await _financialRpc(
+    return _financialRpc(
       function: 'post_transaction',
       params: params,
       reference: reference,
     );
   }
 
-  Future<void> postTransfer({
+  Future<FinancialMutationResult> postTransfer({
     required String sourceWalletId,
     required String destinationWalletId,
     required String amount,
@@ -125,7 +141,7 @@ class FinanceService {
         'transactionDate': DateFormat('yyyy-MM-dd').format(transactionDate),
       },
     };
-    await _financialRpc(
+    return _financialRpc(
       function: 'post_transfer',
       params: params,
       reference: reference,
@@ -183,13 +199,14 @@ class FinanceService {
         .toList();
   }
 
-  Future<void> _financialRpc({
+  Future<FinancialMutationResult> _financialRpc({
     required String function,
     required Map<String, dynamic> params,
     required String reference,
   }) async {
     try {
       await client.rpc(function, params: params);
+      return FinancialMutationResult.committed;
     } catch (error) {
       if (database == null || !_looksOffline(error)) rethrow;
       await database!
@@ -203,6 +220,7 @@ class FinanceService {
               updatedAt: Value(DateTime.now().toUtc()),
             ),
           );
+      return FinancialMutationResult.queued;
     }
   }
 

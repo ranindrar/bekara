@@ -6,6 +6,7 @@ import '../core/config/app_environment.dart';
 import '../core/database/app_database.dart';
 import '../core/logging/app_logger.dart';
 import '../core/providers/core_providers.dart';
+import 'app_locale.dart';
 import 'bekara_app.dart';
 
 class AppBootstrap {
@@ -16,6 +17,7 @@ class AppBootstrap {
 }
 
 Future<AppBootstrap> bootstrapApplication() async {
+  await initializeAppLocale();
   const environment = AppEnvironment.fromDefines();
   AppLogger.info(
     environment.hasSupabaseConfiguration

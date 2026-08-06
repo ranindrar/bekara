@@ -84,9 +84,14 @@ final cashFlowDataProvider = FutureProvider<Map<String, dynamic>>((ref) async {
 });
 
 class CashFlowPage extends ConsumerStatefulWidget {
-  const CashFlowPage({required this.contextData, super.key});
+  const CashFlowPage({
+    required this.contextData,
+    this.onSynchronized,
+    super.key,
+  });
 
   final HouseholdContext contextData;
+  final VoidCallback? onSynchronized;
 
   @override
   ConsumerState<CashFlowPage> createState() => _CashFlowPageState();
@@ -729,6 +734,7 @@ class _CashFlowPageState extends ConsumerState<CashFlowPage> {
           ),
         ),
       );
+      widget.onSynchronized?.call();
     });
   }
 

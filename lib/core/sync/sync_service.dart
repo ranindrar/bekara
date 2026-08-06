@@ -63,7 +63,12 @@ class SyncService {
         final conflict =
             safeCode == 'VERSION_CONFLICT' ||
             safeCode == 'PERIOD_LOCKED' ||
-            safeCode == 'IDEMPOTENCY_CONFLICT';
+            safeCode == 'IDEMPOTENCY_CONFLICT' ||
+            safeCode == 'LOCKED_FUNDS_IN_USE' ||
+            safeCode == 'UNAUTHENTICATED' ||
+            safeCode == 'FORBIDDEN' ||
+            safeCode == 'VALIDATION_ERROR' ||
+            safeCode == 'NOT_FOUND';
         await (database.update(database.pendingMutations)..where(
               (row) => row.clientReferenceId.equals(mutation.clientReferenceId),
             ))
@@ -159,6 +164,7 @@ class SyncService {
       'VERSION_CONFLICT',
       'PERIOD_LOCKED',
       'IDEMPOTENCY_CONFLICT',
+      'LOCKED_FUNDS_IN_USE',
       'UNAUTHENTICATED',
       'FORBIDDEN',
       'VALIDATION_ERROR',

@@ -45,6 +45,20 @@ void main() {
         FinanceValidation.friendlyError(Exception('LOCKED_FUNDS_IN_USE')),
         contains('dana terkunci'),
       );
+      expect(
+        FinanceValidation.friendlyError(
+          Exception('VALIDATION_ERROR: category'),
+        ),
+        contains('Kategori'),
+      );
+      expect(
+        FinanceValidation.friendlyError(Exception('NOT_FOUND: wallet')),
+        contains('Dompet'),
+      );
+      expect(
+        FinanceValidation.friendlyError(Exception('UNAUTHENTICATED')),
+        contains('Sesi'),
+      );
     });
   });
 }

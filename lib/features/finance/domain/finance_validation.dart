@@ -55,12 +55,21 @@ class FinanceValidation {
     if (message.contains('LOCKED_FUNDS_IN_USE')) {
       return 'Saldo ini dialokasikan sebagai dana terkunci. Lepaskan alokasinya sebelum digunakan.';
     }
+    if (message.contains('UNAUTHENTICATED')) {
+      return 'Sesi Anda sudah berakhir. Silakan masuk kembali.';
+    }
+    if (message.contains('NOT_FOUND: WALLET')) {
+      return 'Dompet tidak ditemukan atau sudah tidak tersedia.';
+    }
+    if (message.contains('VALIDATION_ERROR: CATEGORY')) {
+      return 'Kategori tidak sesuai dengan jenis atau cakupan transaksi.';
+    }
     if (message.contains('FORBIDDEN')) {
       return 'Anda tidak memiliki izin untuk aksi ini.';
     }
     if (message.contains('VALIDATION_ERROR')) {
       return 'Data belum valid. Periksa kembali input Anda.';
     }
-    return 'Data gagal disimpan. Periksa koneksi lalu coba lagi.';
+    return 'Data gagal disimpan. Muat ulang lalu coba lagi.';
   }
 }

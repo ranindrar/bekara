@@ -32,8 +32,8 @@ Fondasi kode selesai. Item berikut memerlukan akses/tool eksternal dan harus dij
 |---|---|---|
 | Deploy migration branding `202608050001` | DONE | Diterapkan ke remote Supabase pada 5 Agustus 2026 |
 | Integration test RLS/RPC remote | PENDING OPS | RPC household belum termasuk Fase 0; audit read-policy awal sudah dilakukan, suite end-to-end dilanjutkan bersama slice household |
-| Auth test pada Android nyata | PENDING OPS | Tidak ada perangkat/emulator Android aktif |
-| Android toolchain health | ACTION REQUIRED | Pasang Android command-line tools dan terima SDK licenses |
+| Auth test pada Android nyata | PENDING OPS | Emulator sudah aktif dan smoke test lulus; perangkat fisik tetap perlu diuji |
+| Android toolchain health | DONE | Android SDK, emulator Pixel 9, build, install, dan launch APK terverifikasi |
 
 Status `PENDING OPS` bukan implementasi aplikasi yang belum dibuat, tetapi gate verifikasi lingkungan sebelum rilis internal.
 
@@ -61,7 +61,7 @@ Status `PENDING OPS` bukan implementasi aplikasi yang belum dibuat, tetapi gate 
 | Navigation/UI Fase 1 | DONE | Beranda, transaksi, dompet, laporan, form pencatatan dan transfer |
 | Migration ledger remote | DONE | Migration `003`, `004`, dan hardening permission `005` diterapkan ke remote Supabase |
 | Integration test dua akun | PENDING OPS | Membutuhkan dua akun auth yang sudah dikonfirmasi |
-| Android real-device test | PENDING OPS | Belum ada perangkat/emulator aktif |
+| Android real-device test | PENDING OPS | Emulator smoke test lulus; perangkat fisik belum diuji |
 
 ## Verifikasi Fase 1 — 5 Agustus 2026
 
@@ -102,10 +102,24 @@ Migration hardening `202608060001_phase1_security_hardening.sql` sudah diterapka
 | Offline/sync | DONE CODE | Drift v2, pending queue, cursor, tombstone, retry, conflict, dan metrik aman |
 | Backup/export | DONE CODE | Export remote, JSON checksum, restore cache idempotent, dan CSV privacy-aware |
 | Migration remote | DONE | Migration `202608060002` sampai `202608060007` diterapkan dan remote up-to-date |
-| Flutter verification | PASS | Analyzer tanpa issue, 20 test lulus, debug APK berhasil dibangun |
+| Flutter verification | PASS | Analyzer tanpa issue, 25 test lulus, debug APK berhasil dibangun |
 | PostgreSQL verification | PASS | Database lint bersih dan 32 assertion pgTAP lulus pada remote |
-| Android emulator smoke test | PASS | APK terkonfigurasi terpasang dan layar Ringkasan/Cash Flow berhasil dimuat pada Pixel 9 API emulator |
+| Android emulator smoke test | PASS | APK terkonfigurasi terpasang; Ringkasan, Cash Flow, form transaksi, locale tanggal Indonesia, dan validasi Simpan berhasil diuji pada Pixel 9 API emulator |
 | Two-account/two-device test | PENDING OPS | Memerlukan dua akun terkonfirmasi dan dua perangkat/emulator aktif |
 | Full restore project uji | PENDING OPS | Export/checksum/restore cache teruji; restore end-to-end perlu project uji terpisah |
 
 Implementasi Fase 2 selesai secara kode. Distribusi tester tetap menunggu behavioral test dua akun, dua perangkat, dan latihan restore pada project uji. Detail per task ada di [phase-2 tracker](phase-2-tracker.md).
+
+## Stabilisasi transaksi - 6 Agustus 2026
+
+| Area | Status | Hasil |
+|---|---|---|
+| Crash form transaksi | FIXED / PASS | `LocaleDataException` diperbaiki dengan inisialisasi locale `id_ID` saat bootstrap |
+| Pemilihan wallet | FIXED / PASS | Hanya wallet aktif milik pengguna atau shared yang dapat dipakai; sumber/tujuan transfer mengikuti aturan server |
+| Pemilihan kategori | FIXED / PASS | Jenis dan scope kategori selalu diselaraskan dengan payload transaksi |
+| Validasi Simpan | FIXED / PASS | Dialog tidak ditutup untuk nominal, wallet, kategori, atau tujuan transfer yang belum valid |
+| Status offline | FIXED / PASS | Mutation mengembalikan status committed/queued dan pending sync ditampilkan di UI |
+| Pesan error aman | FIXED / PASS | Sesi, wallet, kategori, periode, dan dana terkunci memiliki pesan spesifik tanpa membocorkan detail backend |
+| Emulator form smoke test | PASS | Form tampil dengan tanggal Indonesia dan validasi nominal bekerja tanpa exception runtime |
+| Authenticated transaction mutation | READY FOR USER RETEST | Tidak membuat transaksi palsu pada ledger pengguna saat smoke test |
+| Regression verification | PASS | `flutter analyze`, 25 Flutter test, debug APK build, install, dan launch emulator lulus |

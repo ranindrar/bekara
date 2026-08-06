@@ -8,6 +8,7 @@ import '../../cash_flow/presentation/cash_flow_page.dart';
 import '../../household/domain/household_context.dart';
 import '../data/finance_service.dart';
 import '../domain/finance_validation.dart';
+import '../domain/transaction_selection.dart';
 
 final financeServiceProvider = Provider<FinanceService>(
   (ref) => FinanceService(
@@ -24,12 +25,14 @@ final financeDataProvider = FutureProvider<Map<String, dynamic>>((ref) async {
     service.wallets(),
     service.transactions(),
     service.categoryReport(),
+    service.pendingMutationCount(),
   ]);
   return {
     'dashboard': values[0],
     'wallets': values[1],
     'transactions': values[2],
     'report': values[3],
+    'pendingCount': values[4],
   };
 });
 
@@ -89,21 +92,49 @@ class _FinanceHomePageState extends ConsumerState<FinanceHomePage> {
           final transactions =
               value['transactions'] as List<Map<String, dynamic>>;
           final report = value['report'] as List<Map<String, dynamic>>;
-          return IndexedStack(
-            index: _index,
+          final pendingCount = value['pendingCount'] as int;
+          return Column(
             children: [
-              _DashboardTab(
-                contextData: widget.contextData,
-                dashboard: dashboard,
-                wallets: wallets,
+              if (pendingCount > 0)
+                Material(
+                  color: Theme.of(context).colorScheme.tertiaryContainer,
+                  child: ListTile(
+                    leading: const Icon(Icons.cloud_upload_outlined),
+                    title: Text(
+                      '$pendingCount perubahan menunggu sinkronisasi',
+                    ),
+                    subtitle: const Text(
+                      'Buka Cash Flow untuk mengirim data ke server.',
+                    ),
+                    trailing: const Icon(Icons.chevron_right),
+                    onTap: () => setState(() => _index = 4),
+                  ),
+                ),
+              Expanded(
+                child: IndexedStack(
+                  index: _index,
+                  children: [
+                    _DashboardTab(
+                      contextData: widget.contextData,
+                      dashboard: dashboard,
+                      wallets: wallets,
+                    ),
+                    _TransactionsTab(
+                      transactions: transactions,
+                      onReverse: _correctTransaction,
+                    ),
+                    _WalletsTab(
+                      wallets: wallets,
+                      onReconcile: _reconcileWallet,
+                    ),
+                    _ReportTab(report: report),
+                    CashFlowPage(
+                      contextData: widget.contextData,
+                      onSynchronized: _refresh,
+                    ),
+                  ],
+                ),
               ),
-              _TransactionsTab(
-                transactions: transactions,
-                onReverse: _correctTransaction,
-              ),
-              _WalletsTab(wallets: wallets, onReconcile: _reconcileWallet),
-              _ReportTab(report: report),
-              CashFlowPage(contextData: widget.contextData),
             ],
           );
         },
@@ -292,205 +323,376 @@ class _FinanceHomePageState extends ConsumerState<FinanceHomePage> {
   Future<void> _showTransactionDialog(
     List<Map<String, dynamic>> wallets,
   ) async {
-    if (wallets.isEmpty) {
-      setState(() => _index = 2);
+    final userId = ref.read(supabaseClientProvider)?.auth.currentUser?.id;
+    if (userId == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            FinanceValidation.friendlyError(Exception('UNAUTHENTICATED')),
+          ),
+        ),
+      );
       return;
     }
+    final transactionWallets = TransactionSelection.transactionWallets(
+      wallets,
+      userId,
+    );
+    if (transactionWallets.isEmpty) {
+      setState(() => _index = 2);
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            'Tambahkan dompet aktif milik Anda atau gunakan dompet bersama.',
+          ),
+        ),
+      );
+      return;
+    }
+    late final List<Map<String, dynamic>> allCategories;
+    try {
+      allCategories = await ref.read(financeServiceProvider).categories();
+    } catch (error) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(FinanceValidation.friendlyError(error))),
+      );
+      return;
+    }
+    if (!mounted) return;
     final amount = TextEditingController();
     final description = TextEditingController();
     var transactionDate = DateTime.now();
     var kind = 'EXPENSE';
     var scope = 'HOUSEHOLD';
     var privacyMode = 'PRIVATE_FULL';
-    var walletId = wallets.first['id'] as String;
+    String? walletId = TransactionSelection.firstId(transactionWallets);
     var transfer = false;
     String? destinationId;
-    String? categoryId;
-    List<Map<String, dynamic>> categories = await ref
-        .read(financeServiceProvider)
-        .categories(kind);
-    if (categories.isNotEmpty) categoryId = categories.first['id'] as String;
-    if (!mounted) return;
+    String? validationMessage;
+    String? categoryId = TransactionSelection.firstId(
+      TransactionSelection.categories(allCategories, kind, scope),
+    );
     final submit = await showDialog<bool>(
       context: context,
-      builder: (context) => StatefulBuilder(
-        builder: (context, setDialogState) => AlertDialog(
-          title: const Text('Catat transaksi'),
-          content: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                SwitchListTile(
-                  value: transfer,
-                  title: const Text('Transfer internal'),
-                  onChanged: (value) => setDialogState(() => transfer = value),
-                ),
-                if (!transfer)
-                  DropdownButtonFormField(
-                    initialValue: kind,
-                    items: const [
-                      DropdownMenuItem(
-                        value: 'EXPENSE',
-                        child: Text('Pengeluaran'),
+      builder: (dialogContext) => StatefulBuilder(
+        builder: (context, setDialogState) {
+          final selectableWallets = transfer
+              ? TransactionSelection.transferSources(wallets, userId)
+              : transactionWallets;
+          final destinations = TransactionSelection.transferDestinations(
+            wallets,
+            userId,
+            walletId,
+          );
+          final categories = TransactionSelection.categories(
+            allCategories,
+            kind,
+            scope,
+          );
+          return AlertDialog(
+            title: const Text('Catat transaksi'),
+            content: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  SwitchListTile(
+                    value: transfer,
+                    title: const Text('Transfer internal'),
+                    onChanged: (value) => setDialogState(() {
+                      transfer = value;
+                      final nextWallets = transfer
+                          ? TransactionSelection.transferSources(
+                              wallets,
+                              userId,
+                            )
+                          : transactionWallets;
+                      if (!nextWallets.any(
+                        (wallet) => wallet['id'] == walletId,
+                      )) {
+                        walletId = TransactionSelection.firstId(nextWallets);
+                      }
+                      destinationId = null;
+                      validationMessage = null;
+                    }),
+                  ),
+                  if (!transfer)
+                    DropdownButtonFormField<String>(
+                      key: ValueKey('kind-$kind'),
+                      initialValue: kind,
+                      decoration: const InputDecoration(
+                        labelText: 'Jenis transaksi',
                       ),
-                      DropdownMenuItem(
-                        value: 'INCOME',
-                        child: Text('Pemasukan'),
+                      items: const [
+                        DropdownMenuItem(
+                          value: 'EXPENSE',
+                          child: Text('Pengeluaran'),
+                        ),
+                        DropdownMenuItem(
+                          value: 'INCOME',
+                          child: Text('Pemasukan'),
+                        ),
+                      ],
+                      onChanged: (value) => setDialogState(() {
+                        kind = value!;
+                        categoryId = TransactionSelection.firstId(
+                          TransactionSelection.categories(
+                            allCategories,
+                            kind,
+                            scope,
+                          ),
+                        );
+                        validationMessage = null;
+                      }),
+                    ),
+                  if (selectableWallets.isNotEmpty)
+                    DropdownButtonFormField<String>(
+                      key: ValueKey('wallet-$transfer-$walletId'),
+                      initialValue: walletId,
+                      isExpanded: true,
+                      decoration: const InputDecoration(labelText: 'Dompet'),
+                      items: selectableWallets
+                          .map(
+                            (wallet) => DropdownMenuItem(
+                              value: wallet['id'] as String,
+                              child: Text(
+                                '${wallet['name']} - ${_money(wallet['availableBalance'] ?? wallet['balance'])} tersedia',
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                          )
+                          .toList(),
+                      onChanged: (value) => setDialogState(() {
+                        walletId = value;
+                        destinationId = null;
+                        validationMessage = null;
+                      }),
+                    )
+                  else
+                    const ListTile(
+                      contentPadding: EdgeInsets.zero,
+                      leading: Icon(Icons.warning_amber),
+                      title: Text('Tidak ada dompet yang dapat digunakan.'),
+                    ),
+                  if (transfer && destinations.isNotEmpty)
+                    DropdownButtonFormField<String>(
+                      key: ValueKey('destination-$walletId-$destinationId'),
+                      initialValue: destinationId,
+                      isExpanded: true,
+                      decoration: const InputDecoration(
+                        labelText: 'Dompet tujuan',
                       ),
-                    ],
-                    onChanged: (value) async {
-                      kind = value!;
-                      categories = await ref
-                          .read(financeServiceProvider)
-                          .categories(kind);
-                      categoryId = categories.isEmpty
-                          ? null
-                          : categories.first['id'] as String;
-                      setDialogState(() {});
+                      items: destinations
+                          .map(
+                            (wallet) => DropdownMenuItem(
+                              value: wallet['id'] as String,
+                              child: Text(
+                                wallet['name'] as String,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                          )
+                          .toList(),
+                      onChanged: (value) => setDialogState(() {
+                        destinationId = value;
+                        validationMessage = null;
+                      }),
+                    )
+                  else if (transfer)
+                    const ListTile(
+                      contentPadding: EdgeInsets.zero,
+                      leading: Icon(Icons.info_outline),
+                      title: Text('Tidak ada dompet tujuan yang tersedia.'),
+                    ),
+                  if (!transfer && categories.isNotEmpty)
+                    DropdownButtonFormField<String>(
+                      key: ValueKey('category-$kind-$scope-$categoryId'),
+                      initialValue: categoryId,
+                      isExpanded: true,
+                      decoration: const InputDecoration(labelText: 'Kategori'),
+                      items: categories
+                          .map(
+                            (category) => DropdownMenuItem(
+                              value: category['id'] as String,
+                              child: Text(
+                                category['scope'] == 'PRIVATE'
+                                    ? '${category['name']} (Pribadi)'
+                                    : category['name'] as String,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                          )
+                          .toList(),
+                      onChanged: (value) => setDialogState(() {
+                        categoryId = value;
+                        validationMessage = null;
+                      }),
+                    )
+                  else if (!transfer)
+                    const ListTile(
+                      contentPadding: EdgeInsets.zero,
+                      leading: Icon(Icons.info_outline),
+                      title: Text(
+                        'Belum ada kategori untuk jenis dan cakupan ini.',
+                      ),
+                    ),
+                  if (!transfer)
+                    DropdownButtonFormField<String>(
+                      key: ValueKey('scope-$scope'),
+                      initialValue: scope,
+                      decoration: const InputDecoration(labelText: 'Cakupan'),
+                      items: const [
+                        DropdownMenuItem(
+                          value: 'HOUSEHOLD',
+                          child: Text('Keluarga'),
+                        ),
+                        DropdownMenuItem(
+                          value: 'PRIVATE',
+                          child: Text('Pribadi'),
+                        ),
+                      ],
+                      onChanged: (value) => setDialogState(() {
+                        scope = value!;
+                        categoryId = TransactionSelection.firstId(
+                          TransactionSelection.categories(
+                            allCategories,
+                            kind,
+                            scope,
+                          ),
+                        );
+                        validationMessage = null;
+                      }),
+                    ),
+                  if (!transfer && scope == 'PRIVATE')
+                    DropdownButtonFormField<String>(
+                      initialValue: privacyMode,
+                      decoration: const InputDecoration(labelText: 'Privasi'),
+                      items: const [
+                        DropdownMenuItem(
+                          value: 'PRIVATE_FULL',
+                          child: Text('Penuh — hanya saya'),
+                        ),
+                        DropdownMenuItem(
+                          value: 'PRIVATE_SUMMARY',
+                          child: Text('Ringkasan — nominal & tanggal'),
+                        ),
+                        DropdownMenuItem(
+                          value: 'HOUSEHOLD_VISIBLE',
+                          child: Text('Terlihat lengkap'),
+                        ),
+                      ],
+                      onChanged: (value) => privacyMode = value!,
+                    ),
+                  TextField(
+                    controller: amount,
+                    keyboardType: TextInputType.number,
+                    decoration: const InputDecoration(labelText: 'Nominal'),
+                    onChanged: (_) =>
+                        setDialogState(() => validationMessage = null),
+                  ),
+                  TextField(
+                    controller: description,
+                    decoration: const InputDecoration(labelText: 'Keterangan'),
+                  ),
+                  ListTile(
+                    contentPadding: EdgeInsets.zero,
+                    title: const Text('Tanggal transaksi'),
+                    subtitle: Text(
+                      DateFormat(
+                        'dd MMMM yyyy',
+                        'id_ID',
+                      ).format(transactionDate),
+                    ),
+                    trailing: const Icon(Icons.calendar_month),
+                    onTap: () async {
+                      final picked = await showDatePicker(
+                        context: context,
+                        initialDate: transactionDate,
+                        firstDate: DateTime(2020),
+                        lastDate: DateTime.now(),
+                      );
+                      if (picked != null && context.mounted) {
+                        setDialogState(() => transactionDate = picked);
+                      }
                     },
                   ),
-                DropdownButtonFormField(
-                  initialValue: walletId,
-                  decoration: const InputDecoration(labelText: 'Dompet'),
-                  items: wallets
-                      .map(
-                        (w) => DropdownMenuItem(
-                          value: w['id'] as String,
-                          child: Text(w['name'] as String),
+                  if (validationMessage != null)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 8),
+                      child: Text(
+                        validationMessage!,
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.error,
                         ),
-                      )
-                      .toList(),
-                  onChanged: (value) => walletId = value!,
-                ),
-                if (transfer)
-                  DropdownButtonFormField<String>(
-                    decoration: const InputDecoration(
-                      labelText: 'Dompet tujuan',
+                      ),
                     ),
-                    items: wallets
-                        .where((w) => w['id'] != walletId)
-                        .map(
-                          (w) => DropdownMenuItem(
-                            value: w['id'] as String,
-                            child: Text(w['name'] as String),
-                          ),
-                        )
-                        .toList(),
-                    onChanged: (value) => destinationId = value,
-                  ),
-                if (!transfer && categories.isNotEmpty)
-                  DropdownButtonFormField<String>(
-                    initialValue: categoryId,
-                    decoration: const InputDecoration(labelText: 'Kategori'),
-                    items: categories
-                        .map(
-                          (c) => DropdownMenuItem(
-                            value: c['id'] as String,
-                            child: Text(c['name'] as String),
-                          ),
-                        )
-                        .toList(),
-                    onChanged: (value) => categoryId = value,
-                  ),
-                if (!transfer)
-                  DropdownButtonFormField(
-                    initialValue: scope,
-                    items: const [
-                      DropdownMenuItem(
-                        value: 'HOUSEHOLD',
-                        child: Text('Keluarga'),
-                      ),
-                      DropdownMenuItem(
-                        value: 'PRIVATE',
-                        child: Text('Pribadi'),
-                      ),
-                    ],
-                    onChanged: (value) => setDialogState(() => scope = value!),
-                  ),
-                if (!transfer && scope == 'PRIVATE')
-                  DropdownButtonFormField<String>(
-                    initialValue: privacyMode,
-                    decoration: const InputDecoration(labelText: 'Privasi'),
-                    items: const [
-                      DropdownMenuItem(
-                        value: 'PRIVATE_FULL',
-                        child: Text('Penuh — hanya saya'),
-                      ),
-                      DropdownMenuItem(
-                        value: 'PRIVATE_SUMMARY',
-                        child: Text('Ringkasan — nominal & tanggal'),
-                      ),
-                      DropdownMenuItem(
-                        value: 'HOUSEHOLD_VISIBLE',
-                        child: Text('Terlihat lengkap'),
-                      ),
-                    ],
-                    onChanged: (value) => privacyMode = value!,
-                  ),
-                TextField(
-                  controller: amount,
-                  keyboardType: TextInputType.number,
-                  decoration: const InputDecoration(labelText: 'Nominal'),
-                ),
-                TextField(
-                  controller: description,
-                  decoration: const InputDecoration(labelText: 'Keterangan'),
-                ),
-                ListTile(
-                  contentPadding: EdgeInsets.zero,
-                  title: const Text('Tanggal transaksi'),
-                  subtitle: Text(
-                    DateFormat('dd MMMM yyyy', 'id_ID').format(transactionDate),
-                  ),
-                  trailing: const Icon(Icons.calendar_month),
-                  onTap: () async {
-                    final picked = await showDatePicker(
-                      context: context,
-                      initialDate: transactionDate,
-                      firstDate: DateTime(2020),
-                      lastDate: DateTime.now(),
-                    );
-                    if (picked != null) {
-                      setDialogState(() => transactionDate = picked);
+                ],
+              ),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(dialogContext, false),
+                child: const Text('Batal'),
+              ),
+              FilledButton(
+                onPressed: () {
+                  String? error;
+                  try {
+                    FinanceValidation.normalizeAmount(amount.text);
+                  } on FormatException catch (exception) {
+                    error = exception.message.toString();
+                  }
+                  if (error == null && walletId == null) {
+                    error = 'Pilih dompet yang dapat digunakan.';
+                  } else if (error == null && transfer) {
+                    if (destinationId == null) {
+                      error = 'Pilih dompet tujuan.';
+                    } else if (!destinations.any(
+                      (wallet) => wallet['id'] == destinationId,
+                    )) {
+                      error = 'Dompet tujuan sudah tidak tersedia.';
                     }
-                  },
-                ),
-              ],
-            ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context, false),
-              child: const Text('Batal'),
-            ),
-            FilledButton(
-              onPressed: () => Navigator.pop(context, true),
-              child: const Text('Simpan'),
-            ),
-          ],
-        ),
+                  } else if (error == null && !transfer) {
+                    if (categoryId == null) {
+                      error = 'Pilih atau tambahkan kategori terlebih dahulu.';
+                    } else if (!categories.any(
+                      (category) => category['id'] == categoryId,
+                    )) {
+                      error = 'Kategori tidak sesuai dengan transaksi.';
+                    }
+                  }
+                  if (error != null) {
+                    setDialogState(() => validationMessage = error);
+                    return;
+                  }
+                  Navigator.pop(dialogContext, true);
+                },
+                child: const Text('Simpan'),
+              ),
+            ],
+          );
+        },
       ),
     );
     if (submit == true) {
-      if (transfer && destinationId != null) {
-        await _execute(
+      if (transfer) {
+        await _executeFinancial(
           () => ref
               .read(financeServiceProvider)
               .postTransfer(
-                sourceWalletId: walletId,
+                sourceWalletId: walletId!,
                 destinationWalletId: destinationId!,
                 amount: amount.text,
                 description: description.text,
                 transactionDate: transactionDate,
               ),
         );
-      }
-      if (!transfer && categoryId != null) {
-        await _execute(
+      } else {
+        await _executeFinancial(
           () => ref
               .read(financeServiceProvider)
               .postTransaction(
-                walletId: walletId,
+                walletId: walletId!,
                 categoryId: categoryId!,
                 kind: kind,
                 amount: amount.text,
@@ -504,6 +706,30 @@ class _FinanceHomePageState extends ConsumerState<FinanceHomePage> {
     }
     amount.dispose();
     description.dispose();
+  }
+
+  Future<void> _executeFinancial(
+    Future<FinancialMutationResult> Function() action,
+  ) async {
+    try {
+      final result = await action();
+      _refresh();
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            result == FinancialMutationResult.queued
+                ? 'Koneksi belum tersedia. Transaksi disimpan dan menunggu sinkronisasi.'
+                : 'Transaksi berhasil disimpan.',
+          ),
+        ),
+      );
+    } catch (error) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(FinanceValidation.friendlyError(error))),
+      );
+    }
   }
 
   Future<void> _execute(Future<void> Function() action) async {
