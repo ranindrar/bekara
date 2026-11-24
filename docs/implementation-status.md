@@ -39,9 +39,9 @@ Status `PENDING OPS` bukan implementasi aplikasi yang belum dibuat, tetapi gate 
 
 ## Next implementation slice
 
-1. Selesaikan authenticated mutation, integration test dua akun/dua perangkat, physical-device, dan restore gate Fase 2.
-2. Tulis API specification v3 serta threat model RLS untuk kredit dan attachment.
-3. Implementasikan core account, billing, cicilan, dan pembayaran Fase 3 sebelum import/attachment.
+1. Terapkan migration Fase 3 (`202608080001` sampai `202608080005`) ke Supabase remote dan jalankan ulang pgTAP di remote.
+2. Selesaikan gate operasional Fase 2–3: authenticated mutation, two-account/two-device, perangkat Android fisik (termasuk picker CSV/attachment), dan latihan restore pada project uji.
+3. Setelah seluruh gate lulus, siapkan distribusi tester internal.
 
 ## Fase 1 — sedang dikerjakan
 

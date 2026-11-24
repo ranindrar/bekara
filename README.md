@@ -8,7 +8,7 @@ Aplikasi Flutter offline-capable untuk pencatatan keuangan suami–istri. Drift/
 
 ## Status
 
-Fase 2 cash-flow selesai secara kode: periode dan locking, koreksi ter-audit, budget, soft locked funds, batas aman harian, tagihan rutin, sinkronisasi, backup JSON, dan export CSV. Verifikasi operasional dua akun/perangkat dan restore project uji dicatat di [implementation status](docs/implementation-status.md).
+Fase 3 kewajiban dan import selesai secara kode: akun PayLater/kartu kredit, billing period, cicilan, pembayaran kewajiban, notifikasi in-app, import CSV, dan lampiran nota, di atas fondasi cash-flow Fase 2. Migration Fase 3 belum diterapkan ke Supabase remote. Verifikasi operasional dua akun/perangkat, perangkat fisik, dan restore project uji dicatat di [implementation status](docs/implementation-status.md).
 
 ## Menjalankan
 
