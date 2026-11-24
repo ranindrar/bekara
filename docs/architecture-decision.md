@@ -83,6 +83,15 @@ Realtime hanya memberi tahu perangkat bahwa data berubah. Setelah menerima event
 
 Dompet kredit (`CREDIT_CARD` dan `PAYLATER`) tidak masuk saldo kas. Kewajibannya dilaporkan terpisah.
 
+Pada Fase 3, wallet kredit merepresentasikan sisi liability pada ledger: purchase membuat balance semakin negatif dan payment membuatnya kembali menuju nol. `credit_accounts`, billing period, purchase, dan installment schedule menyediakan metadata/read model tanpa menggantikan ledger sebagai sumber kebenaran.
+
+- PayLater selalu personal; credit card dapat personal atau household.
+- Purchase pada kredit personal dapat PRIVATE atau HOUSEHOLD, tetapi account/bill tetap personal.
+- Credit card household hanya menerima purchase HOUSEHOLD_VISIBLE.
+- Household reserve dari kredit personal hanya membuka agregat purchase household yang belum dibayar.
+- Payment mixed-scope dialokasikan pada bill/cicilan tertua lalu proporsional terhadap outstanding scope.
+- PAN dan CVV tidak disimpan. Attachment berada pada private bucket dan diakses melalui signed URL singkat.
+
 ## 5. Model periode
 
 Sistem memiliki dua konfigurasi periode:

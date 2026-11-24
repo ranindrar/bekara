@@ -2325,6 +2325,1934 @@ class SyncEventsCompanion extends UpdateCompanion<SyncEvent> {
   }
 }
 
+class $LocalCreditAccountsTable extends LocalCreditAccounts
+    with TableInfo<$LocalCreditAccountsTable, LocalCreditAccount> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $LocalCreditAccountsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _householdIdMeta = const VerificationMeta(
+    'householdId',
+  );
+  @override
+  late final GeneratedColumn<String> householdId = GeneratedColumn<String>(
+    'household_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _payloadJsonMeta = const VerificationMeta(
+    'payloadJson',
+  );
+  @override
+  late final GeneratedColumn<String> payloadJson = GeneratedColumn<String>(
+    'payload_json',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _serverVersionMeta = const VerificationMeta(
+    'serverVersion',
+  );
+  @override
+  late final GeneratedColumn<int> serverVersion = GeneratedColumn<int>(
+    'server_version',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(1),
+  );
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+    'updated_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    householdId,
+    payloadJson,
+    serverVersion,
+    updatedAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'local_credit_accounts';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<LocalCreditAccount> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('household_id')) {
+      context.handle(
+        _householdIdMeta,
+        householdId.isAcceptableOrUnknown(
+          data['household_id']!,
+          _householdIdMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_householdIdMeta);
+    }
+    if (data.containsKey('payload_json')) {
+      context.handle(
+        _payloadJsonMeta,
+        payloadJson.isAcceptableOrUnknown(
+          data['payload_json']!,
+          _payloadJsonMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_payloadJsonMeta);
+    }
+    if (data.containsKey('server_version')) {
+      context.handle(
+        _serverVersionMeta,
+        serverVersion.isAcceptableOrUnknown(
+          data['server_version']!,
+          _serverVersionMeta,
+        ),
+      );
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_updatedAtMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  LocalCreditAccount map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return LocalCreditAccount(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}id'],
+      )!,
+      householdId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}household_id'],
+      )!,
+      payloadJson: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}payload_json'],
+      )!,
+      serverVersion: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}server_version'],
+      )!,
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at'],
+      )!,
+    );
+  }
+
+  @override
+  $LocalCreditAccountsTable createAlias(String alias) {
+    return $LocalCreditAccountsTable(attachedDatabase, alias);
+  }
+}
+
+class LocalCreditAccount extends DataClass
+    implements Insertable<LocalCreditAccount> {
+  final String id;
+  final String householdId;
+  final String payloadJson;
+  final int serverVersion;
+  final DateTime updatedAt;
+  const LocalCreditAccount({
+    required this.id,
+    required this.householdId,
+    required this.payloadJson,
+    required this.serverVersion,
+    required this.updatedAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    map['household_id'] = Variable<String>(householdId);
+    map['payload_json'] = Variable<String>(payloadJson);
+    map['server_version'] = Variable<int>(serverVersion);
+    map['updated_at'] = Variable<DateTime>(updatedAt);
+    return map;
+  }
+
+  LocalCreditAccountsCompanion toCompanion(bool nullToAbsent) {
+    return LocalCreditAccountsCompanion(
+      id: Value(id),
+      householdId: Value(householdId),
+      payloadJson: Value(payloadJson),
+      serverVersion: Value(serverVersion),
+      updatedAt: Value(updatedAt),
+    );
+  }
+
+  factory LocalCreditAccount.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return LocalCreditAccount(
+      id: serializer.fromJson<String>(json['id']),
+      householdId: serializer.fromJson<String>(json['householdId']),
+      payloadJson: serializer.fromJson<String>(json['payloadJson']),
+      serverVersion: serializer.fromJson<int>(json['serverVersion']),
+      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'householdId': serializer.toJson<String>(householdId),
+      'payloadJson': serializer.toJson<String>(payloadJson),
+      'serverVersion': serializer.toJson<int>(serverVersion),
+      'updatedAt': serializer.toJson<DateTime>(updatedAt),
+    };
+  }
+
+  LocalCreditAccount copyWith({
+    String? id,
+    String? householdId,
+    String? payloadJson,
+    int? serverVersion,
+    DateTime? updatedAt,
+  }) => LocalCreditAccount(
+    id: id ?? this.id,
+    householdId: householdId ?? this.householdId,
+    payloadJson: payloadJson ?? this.payloadJson,
+    serverVersion: serverVersion ?? this.serverVersion,
+    updatedAt: updatedAt ?? this.updatedAt,
+  );
+  LocalCreditAccount copyWithCompanion(LocalCreditAccountsCompanion data) {
+    return LocalCreditAccount(
+      id: data.id.present ? data.id.value : this.id,
+      householdId: data.householdId.present
+          ? data.householdId.value
+          : this.householdId,
+      payloadJson: data.payloadJson.present
+          ? data.payloadJson.value
+          : this.payloadJson,
+      serverVersion: data.serverVersion.present
+          ? data.serverVersion.value
+          : this.serverVersion,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('LocalCreditAccount(')
+          ..write('id: $id, ')
+          ..write('householdId: $householdId, ')
+          ..write('payloadJson: $payloadJson, ')
+          ..write('serverVersion: $serverVersion, ')
+          ..write('updatedAt: $updatedAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode =>
+      Object.hash(id, householdId, payloadJson, serverVersion, updatedAt);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is LocalCreditAccount &&
+          other.id == this.id &&
+          other.householdId == this.householdId &&
+          other.payloadJson == this.payloadJson &&
+          other.serverVersion == this.serverVersion &&
+          other.updatedAt == this.updatedAt);
+}
+
+class LocalCreditAccountsCompanion extends UpdateCompanion<LocalCreditAccount> {
+  final Value<String> id;
+  final Value<String> householdId;
+  final Value<String> payloadJson;
+  final Value<int> serverVersion;
+  final Value<DateTime> updatedAt;
+  final Value<int> rowid;
+  const LocalCreditAccountsCompanion({
+    this.id = const Value.absent(),
+    this.householdId = const Value.absent(),
+    this.payloadJson = const Value.absent(),
+    this.serverVersion = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  LocalCreditAccountsCompanion.insert({
+    required String id,
+    required String householdId,
+    required String payloadJson,
+    this.serverVersion = const Value.absent(),
+    required DateTime updatedAt,
+    this.rowid = const Value.absent(),
+  }) : id = Value(id),
+       householdId = Value(householdId),
+       payloadJson = Value(payloadJson),
+       updatedAt = Value(updatedAt);
+  static Insertable<LocalCreditAccount> custom({
+    Expression<String>? id,
+    Expression<String>? householdId,
+    Expression<String>? payloadJson,
+    Expression<int>? serverVersion,
+    Expression<DateTime>? updatedAt,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (householdId != null) 'household_id': householdId,
+      if (payloadJson != null) 'payload_json': payloadJson,
+      if (serverVersion != null) 'server_version': serverVersion,
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  LocalCreditAccountsCompanion copyWith({
+    Value<String>? id,
+    Value<String>? householdId,
+    Value<String>? payloadJson,
+    Value<int>? serverVersion,
+    Value<DateTime>? updatedAt,
+    Value<int>? rowid,
+  }) {
+    return LocalCreditAccountsCompanion(
+      id: id ?? this.id,
+      householdId: householdId ?? this.householdId,
+      payloadJson: payloadJson ?? this.payloadJson,
+      serverVersion: serverVersion ?? this.serverVersion,
+      updatedAt: updatedAt ?? this.updatedAt,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (householdId.present) {
+      map['household_id'] = Variable<String>(householdId.value);
+    }
+    if (payloadJson.present) {
+      map['payload_json'] = Variable<String>(payloadJson.value);
+    }
+    if (serverVersion.present) {
+      map['server_version'] = Variable<int>(serverVersion.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('LocalCreditAccountsCompanion(')
+          ..write('id: $id, ')
+          ..write('householdId: $householdId, ')
+          ..write('payloadJson: $payloadJson, ')
+          ..write('serverVersion: $serverVersion, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $LocalCreditBillsTable extends LocalCreditBills
+    with TableInfo<$LocalCreditBillsTable, LocalCreditBill> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $LocalCreditBillsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _creditAccountIdMeta = const VerificationMeta(
+    'creditAccountId',
+  );
+  @override
+  late final GeneratedColumn<String> creditAccountId = GeneratedColumn<String>(
+    'credit_account_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _householdIdMeta = const VerificationMeta(
+    'householdId',
+  );
+  @override
+  late final GeneratedColumn<String> householdId = GeneratedColumn<String>(
+    'household_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _payloadJsonMeta = const VerificationMeta(
+    'payloadJson',
+  );
+  @override
+  late final GeneratedColumn<String> payloadJson = GeneratedColumn<String>(
+    'payload_json',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _dueDateMeta = const VerificationMeta(
+    'dueDate',
+  );
+  @override
+  late final GeneratedColumn<DateTime> dueDate = GeneratedColumn<DateTime>(
+    'due_date',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _statusMeta = const VerificationMeta('status');
+  @override
+  late final GeneratedColumn<String> status = GeneratedColumn<String>(
+    'status',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _serverVersionMeta = const VerificationMeta(
+    'serverVersion',
+  );
+  @override
+  late final GeneratedColumn<int> serverVersion = GeneratedColumn<int>(
+    'server_version',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(1),
+  );
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+    'updated_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    creditAccountId,
+    householdId,
+    payloadJson,
+    dueDate,
+    status,
+    serverVersion,
+    updatedAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'local_credit_bills';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<LocalCreditBill> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('credit_account_id')) {
+      context.handle(
+        _creditAccountIdMeta,
+        creditAccountId.isAcceptableOrUnknown(
+          data['credit_account_id']!,
+          _creditAccountIdMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_creditAccountIdMeta);
+    }
+    if (data.containsKey('household_id')) {
+      context.handle(
+        _householdIdMeta,
+        householdId.isAcceptableOrUnknown(
+          data['household_id']!,
+          _householdIdMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_householdIdMeta);
+    }
+    if (data.containsKey('payload_json')) {
+      context.handle(
+        _payloadJsonMeta,
+        payloadJson.isAcceptableOrUnknown(
+          data['payload_json']!,
+          _payloadJsonMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_payloadJsonMeta);
+    }
+    if (data.containsKey('due_date')) {
+      context.handle(
+        _dueDateMeta,
+        dueDate.isAcceptableOrUnknown(data['due_date']!, _dueDateMeta),
+      );
+    }
+    if (data.containsKey('status')) {
+      context.handle(
+        _statusMeta,
+        status.isAcceptableOrUnknown(data['status']!, _statusMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_statusMeta);
+    }
+    if (data.containsKey('server_version')) {
+      context.handle(
+        _serverVersionMeta,
+        serverVersion.isAcceptableOrUnknown(
+          data['server_version']!,
+          _serverVersionMeta,
+        ),
+      );
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_updatedAtMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  LocalCreditBill map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return LocalCreditBill(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}id'],
+      )!,
+      creditAccountId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}credit_account_id'],
+      )!,
+      householdId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}household_id'],
+      )!,
+      payloadJson: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}payload_json'],
+      )!,
+      dueDate: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}due_date'],
+      ),
+      status: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}status'],
+      )!,
+      serverVersion: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}server_version'],
+      )!,
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at'],
+      )!,
+    );
+  }
+
+  @override
+  $LocalCreditBillsTable createAlias(String alias) {
+    return $LocalCreditBillsTable(attachedDatabase, alias);
+  }
+}
+
+class LocalCreditBill extends DataClass implements Insertable<LocalCreditBill> {
+  final String id;
+  final String creditAccountId;
+  final String householdId;
+  final String payloadJson;
+  final DateTime? dueDate;
+  final String status;
+  final int serverVersion;
+  final DateTime updatedAt;
+  const LocalCreditBill({
+    required this.id,
+    required this.creditAccountId,
+    required this.householdId,
+    required this.payloadJson,
+    this.dueDate,
+    required this.status,
+    required this.serverVersion,
+    required this.updatedAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    map['credit_account_id'] = Variable<String>(creditAccountId);
+    map['household_id'] = Variable<String>(householdId);
+    map['payload_json'] = Variable<String>(payloadJson);
+    if (!nullToAbsent || dueDate != null) {
+      map['due_date'] = Variable<DateTime>(dueDate);
+    }
+    map['status'] = Variable<String>(status);
+    map['server_version'] = Variable<int>(serverVersion);
+    map['updated_at'] = Variable<DateTime>(updatedAt);
+    return map;
+  }
+
+  LocalCreditBillsCompanion toCompanion(bool nullToAbsent) {
+    return LocalCreditBillsCompanion(
+      id: Value(id),
+      creditAccountId: Value(creditAccountId),
+      householdId: Value(householdId),
+      payloadJson: Value(payloadJson),
+      dueDate: dueDate == null && nullToAbsent
+          ? const Value.absent()
+          : Value(dueDate),
+      status: Value(status),
+      serverVersion: Value(serverVersion),
+      updatedAt: Value(updatedAt),
+    );
+  }
+
+  factory LocalCreditBill.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return LocalCreditBill(
+      id: serializer.fromJson<String>(json['id']),
+      creditAccountId: serializer.fromJson<String>(json['creditAccountId']),
+      householdId: serializer.fromJson<String>(json['householdId']),
+      payloadJson: serializer.fromJson<String>(json['payloadJson']),
+      dueDate: serializer.fromJson<DateTime?>(json['dueDate']),
+      status: serializer.fromJson<String>(json['status']),
+      serverVersion: serializer.fromJson<int>(json['serverVersion']),
+      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'creditAccountId': serializer.toJson<String>(creditAccountId),
+      'householdId': serializer.toJson<String>(householdId),
+      'payloadJson': serializer.toJson<String>(payloadJson),
+      'dueDate': serializer.toJson<DateTime?>(dueDate),
+      'status': serializer.toJson<String>(status),
+      'serverVersion': serializer.toJson<int>(serverVersion),
+      'updatedAt': serializer.toJson<DateTime>(updatedAt),
+    };
+  }
+
+  LocalCreditBill copyWith({
+    String? id,
+    String? creditAccountId,
+    String? householdId,
+    String? payloadJson,
+    Value<DateTime?> dueDate = const Value.absent(),
+    String? status,
+    int? serverVersion,
+    DateTime? updatedAt,
+  }) => LocalCreditBill(
+    id: id ?? this.id,
+    creditAccountId: creditAccountId ?? this.creditAccountId,
+    householdId: householdId ?? this.householdId,
+    payloadJson: payloadJson ?? this.payloadJson,
+    dueDate: dueDate.present ? dueDate.value : this.dueDate,
+    status: status ?? this.status,
+    serverVersion: serverVersion ?? this.serverVersion,
+    updatedAt: updatedAt ?? this.updatedAt,
+  );
+  LocalCreditBill copyWithCompanion(LocalCreditBillsCompanion data) {
+    return LocalCreditBill(
+      id: data.id.present ? data.id.value : this.id,
+      creditAccountId: data.creditAccountId.present
+          ? data.creditAccountId.value
+          : this.creditAccountId,
+      householdId: data.householdId.present
+          ? data.householdId.value
+          : this.householdId,
+      payloadJson: data.payloadJson.present
+          ? data.payloadJson.value
+          : this.payloadJson,
+      dueDate: data.dueDate.present ? data.dueDate.value : this.dueDate,
+      status: data.status.present ? data.status.value : this.status,
+      serverVersion: data.serverVersion.present
+          ? data.serverVersion.value
+          : this.serverVersion,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('LocalCreditBill(')
+          ..write('id: $id, ')
+          ..write('creditAccountId: $creditAccountId, ')
+          ..write('householdId: $householdId, ')
+          ..write('payloadJson: $payloadJson, ')
+          ..write('dueDate: $dueDate, ')
+          ..write('status: $status, ')
+          ..write('serverVersion: $serverVersion, ')
+          ..write('updatedAt: $updatedAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    creditAccountId,
+    householdId,
+    payloadJson,
+    dueDate,
+    status,
+    serverVersion,
+    updatedAt,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is LocalCreditBill &&
+          other.id == this.id &&
+          other.creditAccountId == this.creditAccountId &&
+          other.householdId == this.householdId &&
+          other.payloadJson == this.payloadJson &&
+          other.dueDate == this.dueDate &&
+          other.status == this.status &&
+          other.serverVersion == this.serverVersion &&
+          other.updatedAt == this.updatedAt);
+}
+
+class LocalCreditBillsCompanion extends UpdateCompanion<LocalCreditBill> {
+  final Value<String> id;
+  final Value<String> creditAccountId;
+  final Value<String> householdId;
+  final Value<String> payloadJson;
+  final Value<DateTime?> dueDate;
+  final Value<String> status;
+  final Value<int> serverVersion;
+  final Value<DateTime> updatedAt;
+  final Value<int> rowid;
+  const LocalCreditBillsCompanion({
+    this.id = const Value.absent(),
+    this.creditAccountId = const Value.absent(),
+    this.householdId = const Value.absent(),
+    this.payloadJson = const Value.absent(),
+    this.dueDate = const Value.absent(),
+    this.status = const Value.absent(),
+    this.serverVersion = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  LocalCreditBillsCompanion.insert({
+    required String id,
+    required String creditAccountId,
+    required String householdId,
+    required String payloadJson,
+    this.dueDate = const Value.absent(),
+    required String status,
+    this.serverVersion = const Value.absent(),
+    required DateTime updatedAt,
+    this.rowid = const Value.absent(),
+  }) : id = Value(id),
+       creditAccountId = Value(creditAccountId),
+       householdId = Value(householdId),
+       payloadJson = Value(payloadJson),
+       status = Value(status),
+       updatedAt = Value(updatedAt);
+  static Insertable<LocalCreditBill> custom({
+    Expression<String>? id,
+    Expression<String>? creditAccountId,
+    Expression<String>? householdId,
+    Expression<String>? payloadJson,
+    Expression<DateTime>? dueDate,
+    Expression<String>? status,
+    Expression<int>? serverVersion,
+    Expression<DateTime>? updatedAt,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (creditAccountId != null) 'credit_account_id': creditAccountId,
+      if (householdId != null) 'household_id': householdId,
+      if (payloadJson != null) 'payload_json': payloadJson,
+      if (dueDate != null) 'due_date': dueDate,
+      if (status != null) 'status': status,
+      if (serverVersion != null) 'server_version': serverVersion,
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  LocalCreditBillsCompanion copyWith({
+    Value<String>? id,
+    Value<String>? creditAccountId,
+    Value<String>? householdId,
+    Value<String>? payloadJson,
+    Value<DateTime?>? dueDate,
+    Value<String>? status,
+    Value<int>? serverVersion,
+    Value<DateTime>? updatedAt,
+    Value<int>? rowid,
+  }) {
+    return LocalCreditBillsCompanion(
+      id: id ?? this.id,
+      creditAccountId: creditAccountId ?? this.creditAccountId,
+      householdId: householdId ?? this.householdId,
+      payloadJson: payloadJson ?? this.payloadJson,
+      dueDate: dueDate ?? this.dueDate,
+      status: status ?? this.status,
+      serverVersion: serverVersion ?? this.serverVersion,
+      updatedAt: updatedAt ?? this.updatedAt,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (creditAccountId.present) {
+      map['credit_account_id'] = Variable<String>(creditAccountId.value);
+    }
+    if (householdId.present) {
+      map['household_id'] = Variable<String>(householdId.value);
+    }
+    if (payloadJson.present) {
+      map['payload_json'] = Variable<String>(payloadJson.value);
+    }
+    if (dueDate.present) {
+      map['due_date'] = Variable<DateTime>(dueDate.value);
+    }
+    if (status.present) {
+      map['status'] = Variable<String>(status.value);
+    }
+    if (serverVersion.present) {
+      map['server_version'] = Variable<int>(serverVersion.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('LocalCreditBillsCompanion(')
+          ..write('id: $id, ')
+          ..write('creditAccountId: $creditAccountId, ')
+          ..write('householdId: $householdId, ')
+          ..write('payloadJson: $payloadJson, ')
+          ..write('dueDate: $dueDate, ')
+          ..write('status: $status, ')
+          ..write('serverVersion: $serverVersion, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $LocalCreditNotificationsTable extends LocalCreditNotifications
+    with TableInfo<$LocalCreditNotificationsTable, LocalCreditNotification> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $LocalCreditNotificationsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _eventKeyMeta = const VerificationMeta(
+    'eventKey',
+  );
+  @override
+  late final GeneratedColumn<String> eventKey = GeneratedColumn<String>(
+    'event_key',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _creditAccountIdMeta = const VerificationMeta(
+    'creditAccountId',
+  );
+  @override
+  late final GeneratedColumn<String> creditAccountId = GeneratedColumn<String>(
+    'credit_account_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _payloadJsonMeta = const VerificationMeta(
+    'payloadJson',
+  );
+  @override
+  late final GeneratedColumn<String> payloadJson = GeneratedColumn<String>(
+    'payload_json',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _dueDateMeta = const VerificationMeta(
+    'dueDate',
+  );
+  @override
+  late final GeneratedColumn<DateTime> dueDate = GeneratedColumn<DateTime>(
+    'due_date',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _isReadMeta = const VerificationMeta('isRead');
+  @override
+  late final GeneratedColumn<bool> isRead = GeneratedColumn<bool>(
+    'is_read',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("is_read" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
+  static const VerificationMeta _dismissedMeta = const VerificationMeta(
+    'dismissed',
+  );
+  @override
+  late final GeneratedColumn<bool> dismissed = GeneratedColumn<bool>(
+    'dismissed',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("dismissed" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+    'updated_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    eventKey,
+    creditAccountId,
+    payloadJson,
+    dueDate,
+    isRead,
+    dismissed,
+    updatedAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'local_credit_notifications';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<LocalCreditNotification> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('event_key')) {
+      context.handle(
+        _eventKeyMeta,
+        eventKey.isAcceptableOrUnknown(data['event_key']!, _eventKeyMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_eventKeyMeta);
+    }
+    if (data.containsKey('credit_account_id')) {
+      context.handle(
+        _creditAccountIdMeta,
+        creditAccountId.isAcceptableOrUnknown(
+          data['credit_account_id']!,
+          _creditAccountIdMeta,
+        ),
+      );
+    }
+    if (data.containsKey('payload_json')) {
+      context.handle(
+        _payloadJsonMeta,
+        payloadJson.isAcceptableOrUnknown(
+          data['payload_json']!,
+          _payloadJsonMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_payloadJsonMeta);
+    }
+    if (data.containsKey('due_date')) {
+      context.handle(
+        _dueDateMeta,
+        dueDate.isAcceptableOrUnknown(data['due_date']!, _dueDateMeta),
+      );
+    }
+    if (data.containsKey('is_read')) {
+      context.handle(
+        _isReadMeta,
+        isRead.isAcceptableOrUnknown(data['is_read']!, _isReadMeta),
+      );
+    }
+    if (data.containsKey('dismissed')) {
+      context.handle(
+        _dismissedMeta,
+        dismissed.isAcceptableOrUnknown(data['dismissed']!, _dismissedMeta),
+      );
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_updatedAtMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {eventKey};
+  @override
+  LocalCreditNotification map(
+    Map<String, dynamic> data, {
+    String? tablePrefix,
+  }) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return LocalCreditNotification(
+      eventKey: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}event_key'],
+      )!,
+      creditAccountId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}credit_account_id'],
+      ),
+      payloadJson: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}payload_json'],
+      )!,
+      dueDate: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}due_date'],
+      ),
+      isRead: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}is_read'],
+      )!,
+      dismissed: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}dismissed'],
+      )!,
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at'],
+      )!,
+    );
+  }
+
+  @override
+  $LocalCreditNotificationsTable createAlias(String alias) {
+    return $LocalCreditNotificationsTable(attachedDatabase, alias);
+  }
+}
+
+class LocalCreditNotification extends DataClass
+    implements Insertable<LocalCreditNotification> {
+  final String eventKey;
+  final String? creditAccountId;
+  final String payloadJson;
+  final DateTime? dueDate;
+  final bool isRead;
+  final bool dismissed;
+  final DateTime updatedAt;
+  const LocalCreditNotification({
+    required this.eventKey,
+    this.creditAccountId,
+    required this.payloadJson,
+    this.dueDate,
+    required this.isRead,
+    required this.dismissed,
+    required this.updatedAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['event_key'] = Variable<String>(eventKey);
+    if (!nullToAbsent || creditAccountId != null) {
+      map['credit_account_id'] = Variable<String>(creditAccountId);
+    }
+    map['payload_json'] = Variable<String>(payloadJson);
+    if (!nullToAbsent || dueDate != null) {
+      map['due_date'] = Variable<DateTime>(dueDate);
+    }
+    map['is_read'] = Variable<bool>(isRead);
+    map['dismissed'] = Variable<bool>(dismissed);
+    map['updated_at'] = Variable<DateTime>(updatedAt);
+    return map;
+  }
+
+  LocalCreditNotificationsCompanion toCompanion(bool nullToAbsent) {
+    return LocalCreditNotificationsCompanion(
+      eventKey: Value(eventKey),
+      creditAccountId: creditAccountId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(creditAccountId),
+      payloadJson: Value(payloadJson),
+      dueDate: dueDate == null && nullToAbsent
+          ? const Value.absent()
+          : Value(dueDate),
+      isRead: Value(isRead),
+      dismissed: Value(dismissed),
+      updatedAt: Value(updatedAt),
+    );
+  }
+
+  factory LocalCreditNotification.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return LocalCreditNotification(
+      eventKey: serializer.fromJson<String>(json['eventKey']),
+      creditAccountId: serializer.fromJson<String?>(json['creditAccountId']),
+      payloadJson: serializer.fromJson<String>(json['payloadJson']),
+      dueDate: serializer.fromJson<DateTime?>(json['dueDate']),
+      isRead: serializer.fromJson<bool>(json['isRead']),
+      dismissed: serializer.fromJson<bool>(json['dismissed']),
+      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'eventKey': serializer.toJson<String>(eventKey),
+      'creditAccountId': serializer.toJson<String?>(creditAccountId),
+      'payloadJson': serializer.toJson<String>(payloadJson),
+      'dueDate': serializer.toJson<DateTime?>(dueDate),
+      'isRead': serializer.toJson<bool>(isRead),
+      'dismissed': serializer.toJson<bool>(dismissed),
+      'updatedAt': serializer.toJson<DateTime>(updatedAt),
+    };
+  }
+
+  LocalCreditNotification copyWith({
+    String? eventKey,
+    Value<String?> creditAccountId = const Value.absent(),
+    String? payloadJson,
+    Value<DateTime?> dueDate = const Value.absent(),
+    bool? isRead,
+    bool? dismissed,
+    DateTime? updatedAt,
+  }) => LocalCreditNotification(
+    eventKey: eventKey ?? this.eventKey,
+    creditAccountId: creditAccountId.present
+        ? creditAccountId.value
+        : this.creditAccountId,
+    payloadJson: payloadJson ?? this.payloadJson,
+    dueDate: dueDate.present ? dueDate.value : this.dueDate,
+    isRead: isRead ?? this.isRead,
+    dismissed: dismissed ?? this.dismissed,
+    updatedAt: updatedAt ?? this.updatedAt,
+  );
+  LocalCreditNotification copyWithCompanion(
+    LocalCreditNotificationsCompanion data,
+  ) {
+    return LocalCreditNotification(
+      eventKey: data.eventKey.present ? data.eventKey.value : this.eventKey,
+      creditAccountId: data.creditAccountId.present
+          ? data.creditAccountId.value
+          : this.creditAccountId,
+      payloadJson: data.payloadJson.present
+          ? data.payloadJson.value
+          : this.payloadJson,
+      dueDate: data.dueDate.present ? data.dueDate.value : this.dueDate,
+      isRead: data.isRead.present ? data.isRead.value : this.isRead,
+      dismissed: data.dismissed.present ? data.dismissed.value : this.dismissed,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('LocalCreditNotification(')
+          ..write('eventKey: $eventKey, ')
+          ..write('creditAccountId: $creditAccountId, ')
+          ..write('payloadJson: $payloadJson, ')
+          ..write('dueDate: $dueDate, ')
+          ..write('isRead: $isRead, ')
+          ..write('dismissed: $dismissed, ')
+          ..write('updatedAt: $updatedAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    eventKey,
+    creditAccountId,
+    payloadJson,
+    dueDate,
+    isRead,
+    dismissed,
+    updatedAt,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is LocalCreditNotification &&
+          other.eventKey == this.eventKey &&
+          other.creditAccountId == this.creditAccountId &&
+          other.payloadJson == this.payloadJson &&
+          other.dueDate == this.dueDate &&
+          other.isRead == this.isRead &&
+          other.dismissed == this.dismissed &&
+          other.updatedAt == this.updatedAt);
+}
+
+class LocalCreditNotificationsCompanion
+    extends UpdateCompanion<LocalCreditNotification> {
+  final Value<String> eventKey;
+  final Value<String?> creditAccountId;
+  final Value<String> payloadJson;
+  final Value<DateTime?> dueDate;
+  final Value<bool> isRead;
+  final Value<bool> dismissed;
+  final Value<DateTime> updatedAt;
+  final Value<int> rowid;
+  const LocalCreditNotificationsCompanion({
+    this.eventKey = const Value.absent(),
+    this.creditAccountId = const Value.absent(),
+    this.payloadJson = const Value.absent(),
+    this.dueDate = const Value.absent(),
+    this.isRead = const Value.absent(),
+    this.dismissed = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  LocalCreditNotificationsCompanion.insert({
+    required String eventKey,
+    this.creditAccountId = const Value.absent(),
+    required String payloadJson,
+    this.dueDate = const Value.absent(),
+    this.isRead = const Value.absent(),
+    this.dismissed = const Value.absent(),
+    required DateTime updatedAt,
+    this.rowid = const Value.absent(),
+  }) : eventKey = Value(eventKey),
+       payloadJson = Value(payloadJson),
+       updatedAt = Value(updatedAt);
+  static Insertable<LocalCreditNotification> custom({
+    Expression<String>? eventKey,
+    Expression<String>? creditAccountId,
+    Expression<String>? payloadJson,
+    Expression<DateTime>? dueDate,
+    Expression<bool>? isRead,
+    Expression<bool>? dismissed,
+    Expression<DateTime>? updatedAt,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (eventKey != null) 'event_key': eventKey,
+      if (creditAccountId != null) 'credit_account_id': creditAccountId,
+      if (payloadJson != null) 'payload_json': payloadJson,
+      if (dueDate != null) 'due_date': dueDate,
+      if (isRead != null) 'is_read': isRead,
+      if (dismissed != null) 'dismissed': dismissed,
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  LocalCreditNotificationsCompanion copyWith({
+    Value<String>? eventKey,
+    Value<String?>? creditAccountId,
+    Value<String>? payloadJson,
+    Value<DateTime?>? dueDate,
+    Value<bool>? isRead,
+    Value<bool>? dismissed,
+    Value<DateTime>? updatedAt,
+    Value<int>? rowid,
+  }) {
+    return LocalCreditNotificationsCompanion(
+      eventKey: eventKey ?? this.eventKey,
+      creditAccountId: creditAccountId ?? this.creditAccountId,
+      payloadJson: payloadJson ?? this.payloadJson,
+      dueDate: dueDate ?? this.dueDate,
+      isRead: isRead ?? this.isRead,
+      dismissed: dismissed ?? this.dismissed,
+      updatedAt: updatedAt ?? this.updatedAt,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (eventKey.present) {
+      map['event_key'] = Variable<String>(eventKey.value);
+    }
+    if (creditAccountId.present) {
+      map['credit_account_id'] = Variable<String>(creditAccountId.value);
+    }
+    if (payloadJson.present) {
+      map['payload_json'] = Variable<String>(payloadJson.value);
+    }
+    if (dueDate.present) {
+      map['due_date'] = Variable<DateTime>(dueDate.value);
+    }
+    if (isRead.present) {
+      map['is_read'] = Variable<bool>(isRead.value);
+    }
+    if (dismissed.present) {
+      map['dismissed'] = Variable<bool>(dismissed.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('LocalCreditNotificationsCompanion(')
+          ..write('eventKey: $eventKey, ')
+          ..write('creditAccountId: $creditAccountId, ')
+          ..write('payloadJson: $payloadJson, ')
+          ..write('dueDate: $dueDate, ')
+          ..write('isRead: $isRead, ')
+          ..write('dismissed: $dismissed, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $LocalCreditInstallmentsTable extends LocalCreditInstallments
+    with TableInfo<$LocalCreditInstallmentsTable, LocalCreditInstallment> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $LocalCreditInstallmentsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _creditAccountIdMeta = const VerificationMeta(
+    'creditAccountId',
+  );
+  @override
+  late final GeneratedColumn<String> creditAccountId = GeneratedColumn<String>(
+    'credit_account_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _householdIdMeta = const VerificationMeta(
+    'householdId',
+  );
+  @override
+  late final GeneratedColumn<String> householdId = GeneratedColumn<String>(
+    'household_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _payloadJsonMeta = const VerificationMeta(
+    'payloadJson',
+  );
+  @override
+  late final GeneratedColumn<String> payloadJson = GeneratedColumn<String>(
+    'payload_json',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _dueDateMeta = const VerificationMeta(
+    'dueDate',
+  );
+  @override
+  late final GeneratedColumn<DateTime> dueDate = GeneratedColumn<DateTime>(
+    'due_date',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _statusMeta = const VerificationMeta('status');
+  @override
+  late final GeneratedColumn<String> status = GeneratedColumn<String>(
+    'status',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _serverVersionMeta = const VerificationMeta(
+    'serverVersion',
+  );
+  @override
+  late final GeneratedColumn<int> serverVersion = GeneratedColumn<int>(
+    'server_version',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(1),
+  );
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+    'updated_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    creditAccountId,
+    householdId,
+    payloadJson,
+    dueDate,
+    status,
+    serverVersion,
+    updatedAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'local_credit_installments';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<LocalCreditInstallment> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('credit_account_id')) {
+      context.handle(
+        _creditAccountIdMeta,
+        creditAccountId.isAcceptableOrUnknown(
+          data['credit_account_id']!,
+          _creditAccountIdMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_creditAccountIdMeta);
+    }
+    if (data.containsKey('household_id')) {
+      context.handle(
+        _householdIdMeta,
+        householdId.isAcceptableOrUnknown(
+          data['household_id']!,
+          _householdIdMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_householdIdMeta);
+    }
+    if (data.containsKey('payload_json')) {
+      context.handle(
+        _payloadJsonMeta,
+        payloadJson.isAcceptableOrUnknown(
+          data['payload_json']!,
+          _payloadJsonMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_payloadJsonMeta);
+    }
+    if (data.containsKey('due_date')) {
+      context.handle(
+        _dueDateMeta,
+        dueDate.isAcceptableOrUnknown(data['due_date']!, _dueDateMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_dueDateMeta);
+    }
+    if (data.containsKey('status')) {
+      context.handle(
+        _statusMeta,
+        status.isAcceptableOrUnknown(data['status']!, _statusMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_statusMeta);
+    }
+    if (data.containsKey('server_version')) {
+      context.handle(
+        _serverVersionMeta,
+        serverVersion.isAcceptableOrUnknown(
+          data['server_version']!,
+          _serverVersionMeta,
+        ),
+      );
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_updatedAtMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  LocalCreditInstallment map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return LocalCreditInstallment(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}id'],
+      )!,
+      creditAccountId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}credit_account_id'],
+      )!,
+      householdId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}household_id'],
+      )!,
+      payloadJson: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}payload_json'],
+      )!,
+      dueDate: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}due_date'],
+      )!,
+      status: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}status'],
+      )!,
+      serverVersion: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}server_version'],
+      )!,
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at'],
+      )!,
+    );
+  }
+
+  @override
+  $LocalCreditInstallmentsTable createAlias(String alias) {
+    return $LocalCreditInstallmentsTable(attachedDatabase, alias);
+  }
+}
+
+class LocalCreditInstallment extends DataClass
+    implements Insertable<LocalCreditInstallment> {
+  final String id;
+  final String creditAccountId;
+  final String householdId;
+  final String payloadJson;
+  final DateTime dueDate;
+  final String status;
+  final int serverVersion;
+  final DateTime updatedAt;
+  const LocalCreditInstallment({
+    required this.id,
+    required this.creditAccountId,
+    required this.householdId,
+    required this.payloadJson,
+    required this.dueDate,
+    required this.status,
+    required this.serverVersion,
+    required this.updatedAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    map['credit_account_id'] = Variable<String>(creditAccountId);
+    map['household_id'] = Variable<String>(householdId);
+    map['payload_json'] = Variable<String>(payloadJson);
+    map['due_date'] = Variable<DateTime>(dueDate);
+    map['status'] = Variable<String>(status);
+    map['server_version'] = Variable<int>(serverVersion);
+    map['updated_at'] = Variable<DateTime>(updatedAt);
+    return map;
+  }
+
+  LocalCreditInstallmentsCompanion toCompanion(bool nullToAbsent) {
+    return LocalCreditInstallmentsCompanion(
+      id: Value(id),
+      creditAccountId: Value(creditAccountId),
+      householdId: Value(householdId),
+      payloadJson: Value(payloadJson),
+      dueDate: Value(dueDate),
+      status: Value(status),
+      serverVersion: Value(serverVersion),
+      updatedAt: Value(updatedAt),
+    );
+  }
+
+  factory LocalCreditInstallment.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return LocalCreditInstallment(
+      id: serializer.fromJson<String>(json['id']),
+      creditAccountId: serializer.fromJson<String>(json['creditAccountId']),
+      householdId: serializer.fromJson<String>(json['householdId']),
+      payloadJson: serializer.fromJson<String>(json['payloadJson']),
+      dueDate: serializer.fromJson<DateTime>(json['dueDate']),
+      status: serializer.fromJson<String>(json['status']),
+      serverVersion: serializer.fromJson<int>(json['serverVersion']),
+      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'creditAccountId': serializer.toJson<String>(creditAccountId),
+      'householdId': serializer.toJson<String>(householdId),
+      'payloadJson': serializer.toJson<String>(payloadJson),
+      'dueDate': serializer.toJson<DateTime>(dueDate),
+      'status': serializer.toJson<String>(status),
+      'serverVersion': serializer.toJson<int>(serverVersion),
+      'updatedAt': serializer.toJson<DateTime>(updatedAt),
+    };
+  }
+
+  LocalCreditInstallment copyWith({
+    String? id,
+    String? creditAccountId,
+    String? householdId,
+    String? payloadJson,
+    DateTime? dueDate,
+    String? status,
+    int? serverVersion,
+    DateTime? updatedAt,
+  }) => LocalCreditInstallment(
+    id: id ?? this.id,
+    creditAccountId: creditAccountId ?? this.creditAccountId,
+    householdId: householdId ?? this.householdId,
+    payloadJson: payloadJson ?? this.payloadJson,
+    dueDate: dueDate ?? this.dueDate,
+    status: status ?? this.status,
+    serverVersion: serverVersion ?? this.serverVersion,
+    updatedAt: updatedAt ?? this.updatedAt,
+  );
+  LocalCreditInstallment copyWithCompanion(
+    LocalCreditInstallmentsCompanion data,
+  ) {
+    return LocalCreditInstallment(
+      id: data.id.present ? data.id.value : this.id,
+      creditAccountId: data.creditAccountId.present
+          ? data.creditAccountId.value
+          : this.creditAccountId,
+      householdId: data.householdId.present
+          ? data.householdId.value
+          : this.householdId,
+      payloadJson: data.payloadJson.present
+          ? data.payloadJson.value
+          : this.payloadJson,
+      dueDate: data.dueDate.present ? data.dueDate.value : this.dueDate,
+      status: data.status.present ? data.status.value : this.status,
+      serverVersion: data.serverVersion.present
+          ? data.serverVersion.value
+          : this.serverVersion,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('LocalCreditInstallment(')
+          ..write('id: $id, ')
+          ..write('creditAccountId: $creditAccountId, ')
+          ..write('householdId: $householdId, ')
+          ..write('payloadJson: $payloadJson, ')
+          ..write('dueDate: $dueDate, ')
+          ..write('status: $status, ')
+          ..write('serverVersion: $serverVersion, ')
+          ..write('updatedAt: $updatedAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    creditAccountId,
+    householdId,
+    payloadJson,
+    dueDate,
+    status,
+    serverVersion,
+    updatedAt,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is LocalCreditInstallment &&
+          other.id == this.id &&
+          other.creditAccountId == this.creditAccountId &&
+          other.householdId == this.householdId &&
+          other.payloadJson == this.payloadJson &&
+          other.dueDate == this.dueDate &&
+          other.status == this.status &&
+          other.serverVersion == this.serverVersion &&
+          other.updatedAt == this.updatedAt);
+}
+
+class LocalCreditInstallmentsCompanion
+    extends UpdateCompanion<LocalCreditInstallment> {
+  final Value<String> id;
+  final Value<String> creditAccountId;
+  final Value<String> householdId;
+  final Value<String> payloadJson;
+  final Value<DateTime> dueDate;
+  final Value<String> status;
+  final Value<int> serverVersion;
+  final Value<DateTime> updatedAt;
+  final Value<int> rowid;
+  const LocalCreditInstallmentsCompanion({
+    this.id = const Value.absent(),
+    this.creditAccountId = const Value.absent(),
+    this.householdId = const Value.absent(),
+    this.payloadJson = const Value.absent(),
+    this.dueDate = const Value.absent(),
+    this.status = const Value.absent(),
+    this.serverVersion = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  LocalCreditInstallmentsCompanion.insert({
+    required String id,
+    required String creditAccountId,
+    required String householdId,
+    required String payloadJson,
+    required DateTime dueDate,
+    required String status,
+    this.serverVersion = const Value.absent(),
+    required DateTime updatedAt,
+    this.rowid = const Value.absent(),
+  }) : id = Value(id),
+       creditAccountId = Value(creditAccountId),
+       householdId = Value(householdId),
+       payloadJson = Value(payloadJson),
+       dueDate = Value(dueDate),
+       status = Value(status),
+       updatedAt = Value(updatedAt);
+  static Insertable<LocalCreditInstallment> custom({
+    Expression<String>? id,
+    Expression<String>? creditAccountId,
+    Expression<String>? householdId,
+    Expression<String>? payloadJson,
+    Expression<DateTime>? dueDate,
+    Expression<String>? status,
+    Expression<int>? serverVersion,
+    Expression<DateTime>? updatedAt,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (creditAccountId != null) 'credit_account_id': creditAccountId,
+      if (householdId != null) 'household_id': householdId,
+      if (payloadJson != null) 'payload_json': payloadJson,
+      if (dueDate != null) 'due_date': dueDate,
+      if (status != null) 'status': status,
+      if (serverVersion != null) 'server_version': serverVersion,
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  LocalCreditInstallmentsCompanion copyWith({
+    Value<String>? id,
+    Value<String>? creditAccountId,
+    Value<String>? householdId,
+    Value<String>? payloadJson,
+    Value<DateTime>? dueDate,
+    Value<String>? status,
+    Value<int>? serverVersion,
+    Value<DateTime>? updatedAt,
+    Value<int>? rowid,
+  }) {
+    return LocalCreditInstallmentsCompanion(
+      id: id ?? this.id,
+      creditAccountId: creditAccountId ?? this.creditAccountId,
+      householdId: householdId ?? this.householdId,
+      payloadJson: payloadJson ?? this.payloadJson,
+      dueDate: dueDate ?? this.dueDate,
+      status: status ?? this.status,
+      serverVersion: serverVersion ?? this.serverVersion,
+      updatedAt: updatedAt ?? this.updatedAt,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (creditAccountId.present) {
+      map['credit_account_id'] = Variable<String>(creditAccountId.value);
+    }
+    if (householdId.present) {
+      map['household_id'] = Variable<String>(householdId.value);
+    }
+    if (payloadJson.present) {
+      map['payload_json'] = Variable<String>(payloadJson.value);
+    }
+    if (dueDate.present) {
+      map['due_date'] = Variable<DateTime>(dueDate.value);
+    }
+    if (status.present) {
+      map['status'] = Variable<String>(status.value);
+    }
+    if (serverVersion.present) {
+      map['server_version'] = Variable<int>(serverVersion.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('LocalCreditInstallmentsCompanion(')
+          ..write('id: $id, ')
+          ..write('creditAccountId: $creditAccountId, ')
+          ..write('householdId: $householdId, ')
+          ..write('payloadJson: $payloadJson, ')
+          ..write('dueDate: $dueDate, ')
+          ..write('status: $status, ')
+          ..write('serverVersion: $serverVersion, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
@@ -2336,6 +4264,15 @@ abstract class _$AppDatabase extends GeneratedDatabase {
       $CachedSyncChangesTable(this);
   late final $SyncCursorsTable syncCursors = $SyncCursorsTable(this);
   late final $SyncEventsTable syncEvents = $SyncEventsTable(this);
+  late final $LocalCreditAccountsTable localCreditAccounts =
+      $LocalCreditAccountsTable(this);
+  late final $LocalCreditBillsTable localCreditBills = $LocalCreditBillsTable(
+    this,
+  );
+  late final $LocalCreditNotificationsTable localCreditNotifications =
+      $LocalCreditNotificationsTable(this);
+  late final $LocalCreditInstallmentsTable localCreditInstallments =
+      $LocalCreditInstallmentsTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -2346,6 +4283,10 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     cachedSyncChanges,
     syncCursors,
     syncEvents,
+    localCreditAccounts,
+    localCreditBills,
+    localCreditNotifications,
+    localCreditInstallments,
   ];
 }
 
@@ -3560,6 +5501,1044 @@ typedef $$SyncEventsTableProcessedTableManager =
       SyncEvent,
       PrefetchHooks Function()
     >;
+typedef $$LocalCreditAccountsTableCreateCompanionBuilder =
+    LocalCreditAccountsCompanion Function({
+      required String id,
+      required String householdId,
+      required String payloadJson,
+      Value<int> serverVersion,
+      required DateTime updatedAt,
+      Value<int> rowid,
+    });
+typedef $$LocalCreditAccountsTableUpdateCompanionBuilder =
+    LocalCreditAccountsCompanion Function({
+      Value<String> id,
+      Value<String> householdId,
+      Value<String> payloadJson,
+      Value<int> serverVersion,
+      Value<DateTime> updatedAt,
+      Value<int> rowid,
+    });
+
+class $$LocalCreditAccountsTableFilterComposer
+    extends Composer<_$AppDatabase, $LocalCreditAccountsTable> {
+  $$LocalCreditAccountsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get householdId => $composableBuilder(
+    column: $table.householdId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get payloadJson => $composableBuilder(
+    column: $table.payloadJson,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get serverVersion => $composableBuilder(
+    column: $table.serverVersion,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$LocalCreditAccountsTableOrderingComposer
+    extends Composer<_$AppDatabase, $LocalCreditAccountsTable> {
+  $$LocalCreditAccountsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get householdId => $composableBuilder(
+    column: $table.householdId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get payloadJson => $composableBuilder(
+    column: $table.payloadJson,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get serverVersion => $composableBuilder(
+    column: $table.serverVersion,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$LocalCreditAccountsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $LocalCreditAccountsTable> {
+  $$LocalCreditAccountsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get householdId => $composableBuilder(
+    column: $table.householdId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get payloadJson => $composableBuilder(
+    column: $table.payloadJson,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get serverVersion => $composableBuilder(
+    column: $table.serverVersion,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+}
+
+class $$LocalCreditAccountsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $LocalCreditAccountsTable,
+          LocalCreditAccount,
+          $$LocalCreditAccountsTableFilterComposer,
+          $$LocalCreditAccountsTableOrderingComposer,
+          $$LocalCreditAccountsTableAnnotationComposer,
+          $$LocalCreditAccountsTableCreateCompanionBuilder,
+          $$LocalCreditAccountsTableUpdateCompanionBuilder,
+          (
+            LocalCreditAccount,
+            BaseReferences<
+              _$AppDatabase,
+              $LocalCreditAccountsTable,
+              LocalCreditAccount
+            >,
+          ),
+          LocalCreditAccount,
+          PrefetchHooks Function()
+        > {
+  $$LocalCreditAccountsTableTableManager(
+    _$AppDatabase db,
+    $LocalCreditAccountsTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$LocalCreditAccountsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$LocalCreditAccountsTableOrderingComposer(
+                $db: db,
+                $table: table,
+              ),
+          createComputedFieldComposer: () =>
+              $$LocalCreditAccountsTableAnnotationComposer(
+                $db: db,
+                $table: table,
+              ),
+          updateCompanionCallback:
+              ({
+                Value<String> id = const Value.absent(),
+                Value<String> householdId = const Value.absent(),
+                Value<String> payloadJson = const Value.absent(),
+                Value<int> serverVersion = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => LocalCreditAccountsCompanion(
+                id: id,
+                householdId: householdId,
+                payloadJson: payloadJson,
+                serverVersion: serverVersion,
+                updatedAt: updatedAt,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String id,
+                required String householdId,
+                required String payloadJson,
+                Value<int> serverVersion = const Value.absent(),
+                required DateTime updatedAt,
+                Value<int> rowid = const Value.absent(),
+              }) => LocalCreditAccountsCompanion.insert(
+                id: id,
+                householdId: householdId,
+                payloadJson: payloadJson,
+                serverVersion: serverVersion,
+                updatedAt: updatedAt,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$LocalCreditAccountsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $LocalCreditAccountsTable,
+      LocalCreditAccount,
+      $$LocalCreditAccountsTableFilterComposer,
+      $$LocalCreditAccountsTableOrderingComposer,
+      $$LocalCreditAccountsTableAnnotationComposer,
+      $$LocalCreditAccountsTableCreateCompanionBuilder,
+      $$LocalCreditAccountsTableUpdateCompanionBuilder,
+      (
+        LocalCreditAccount,
+        BaseReferences<
+          _$AppDatabase,
+          $LocalCreditAccountsTable,
+          LocalCreditAccount
+        >,
+      ),
+      LocalCreditAccount,
+      PrefetchHooks Function()
+    >;
+typedef $$LocalCreditBillsTableCreateCompanionBuilder =
+    LocalCreditBillsCompanion Function({
+      required String id,
+      required String creditAccountId,
+      required String householdId,
+      required String payloadJson,
+      Value<DateTime?> dueDate,
+      required String status,
+      Value<int> serverVersion,
+      required DateTime updatedAt,
+      Value<int> rowid,
+    });
+typedef $$LocalCreditBillsTableUpdateCompanionBuilder =
+    LocalCreditBillsCompanion Function({
+      Value<String> id,
+      Value<String> creditAccountId,
+      Value<String> householdId,
+      Value<String> payloadJson,
+      Value<DateTime?> dueDate,
+      Value<String> status,
+      Value<int> serverVersion,
+      Value<DateTime> updatedAt,
+      Value<int> rowid,
+    });
+
+class $$LocalCreditBillsTableFilterComposer
+    extends Composer<_$AppDatabase, $LocalCreditBillsTable> {
+  $$LocalCreditBillsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get creditAccountId => $composableBuilder(
+    column: $table.creditAccountId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get householdId => $composableBuilder(
+    column: $table.householdId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get payloadJson => $composableBuilder(
+    column: $table.payloadJson,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get dueDate => $composableBuilder(
+    column: $table.dueDate,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get status => $composableBuilder(
+    column: $table.status,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get serverVersion => $composableBuilder(
+    column: $table.serverVersion,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$LocalCreditBillsTableOrderingComposer
+    extends Composer<_$AppDatabase, $LocalCreditBillsTable> {
+  $$LocalCreditBillsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get creditAccountId => $composableBuilder(
+    column: $table.creditAccountId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get householdId => $composableBuilder(
+    column: $table.householdId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get payloadJson => $composableBuilder(
+    column: $table.payloadJson,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get dueDate => $composableBuilder(
+    column: $table.dueDate,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get status => $composableBuilder(
+    column: $table.status,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get serverVersion => $composableBuilder(
+    column: $table.serverVersion,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$LocalCreditBillsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $LocalCreditBillsTable> {
+  $$LocalCreditBillsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get creditAccountId => $composableBuilder(
+    column: $table.creditAccountId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get householdId => $composableBuilder(
+    column: $table.householdId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get payloadJson => $composableBuilder(
+    column: $table.payloadJson,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get dueDate =>
+      $composableBuilder(column: $table.dueDate, builder: (column) => column);
+
+  GeneratedColumn<String> get status =>
+      $composableBuilder(column: $table.status, builder: (column) => column);
+
+  GeneratedColumn<int> get serverVersion => $composableBuilder(
+    column: $table.serverVersion,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+}
+
+class $$LocalCreditBillsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $LocalCreditBillsTable,
+          LocalCreditBill,
+          $$LocalCreditBillsTableFilterComposer,
+          $$LocalCreditBillsTableOrderingComposer,
+          $$LocalCreditBillsTableAnnotationComposer,
+          $$LocalCreditBillsTableCreateCompanionBuilder,
+          $$LocalCreditBillsTableUpdateCompanionBuilder,
+          (
+            LocalCreditBill,
+            BaseReferences<
+              _$AppDatabase,
+              $LocalCreditBillsTable,
+              LocalCreditBill
+            >,
+          ),
+          LocalCreditBill,
+          PrefetchHooks Function()
+        > {
+  $$LocalCreditBillsTableTableManager(
+    _$AppDatabase db,
+    $LocalCreditBillsTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$LocalCreditBillsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$LocalCreditBillsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$LocalCreditBillsTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<String> id = const Value.absent(),
+                Value<String> creditAccountId = const Value.absent(),
+                Value<String> householdId = const Value.absent(),
+                Value<String> payloadJson = const Value.absent(),
+                Value<DateTime?> dueDate = const Value.absent(),
+                Value<String> status = const Value.absent(),
+                Value<int> serverVersion = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => LocalCreditBillsCompanion(
+                id: id,
+                creditAccountId: creditAccountId,
+                householdId: householdId,
+                payloadJson: payloadJson,
+                dueDate: dueDate,
+                status: status,
+                serverVersion: serverVersion,
+                updatedAt: updatedAt,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String id,
+                required String creditAccountId,
+                required String householdId,
+                required String payloadJson,
+                Value<DateTime?> dueDate = const Value.absent(),
+                required String status,
+                Value<int> serverVersion = const Value.absent(),
+                required DateTime updatedAt,
+                Value<int> rowid = const Value.absent(),
+              }) => LocalCreditBillsCompanion.insert(
+                id: id,
+                creditAccountId: creditAccountId,
+                householdId: householdId,
+                payloadJson: payloadJson,
+                dueDate: dueDate,
+                status: status,
+                serverVersion: serverVersion,
+                updatedAt: updatedAt,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$LocalCreditBillsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $LocalCreditBillsTable,
+      LocalCreditBill,
+      $$LocalCreditBillsTableFilterComposer,
+      $$LocalCreditBillsTableOrderingComposer,
+      $$LocalCreditBillsTableAnnotationComposer,
+      $$LocalCreditBillsTableCreateCompanionBuilder,
+      $$LocalCreditBillsTableUpdateCompanionBuilder,
+      (
+        LocalCreditBill,
+        BaseReferences<_$AppDatabase, $LocalCreditBillsTable, LocalCreditBill>,
+      ),
+      LocalCreditBill,
+      PrefetchHooks Function()
+    >;
+typedef $$LocalCreditNotificationsTableCreateCompanionBuilder =
+    LocalCreditNotificationsCompanion Function({
+      required String eventKey,
+      Value<String?> creditAccountId,
+      required String payloadJson,
+      Value<DateTime?> dueDate,
+      Value<bool> isRead,
+      Value<bool> dismissed,
+      required DateTime updatedAt,
+      Value<int> rowid,
+    });
+typedef $$LocalCreditNotificationsTableUpdateCompanionBuilder =
+    LocalCreditNotificationsCompanion Function({
+      Value<String> eventKey,
+      Value<String?> creditAccountId,
+      Value<String> payloadJson,
+      Value<DateTime?> dueDate,
+      Value<bool> isRead,
+      Value<bool> dismissed,
+      Value<DateTime> updatedAt,
+      Value<int> rowid,
+    });
+
+class $$LocalCreditNotificationsTableFilterComposer
+    extends Composer<_$AppDatabase, $LocalCreditNotificationsTable> {
+  $$LocalCreditNotificationsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get eventKey => $composableBuilder(
+    column: $table.eventKey,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get creditAccountId => $composableBuilder(
+    column: $table.creditAccountId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get payloadJson => $composableBuilder(
+    column: $table.payloadJson,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get dueDate => $composableBuilder(
+    column: $table.dueDate,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get isRead => $composableBuilder(
+    column: $table.isRead,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get dismissed => $composableBuilder(
+    column: $table.dismissed,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$LocalCreditNotificationsTableOrderingComposer
+    extends Composer<_$AppDatabase, $LocalCreditNotificationsTable> {
+  $$LocalCreditNotificationsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get eventKey => $composableBuilder(
+    column: $table.eventKey,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get creditAccountId => $composableBuilder(
+    column: $table.creditAccountId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get payloadJson => $composableBuilder(
+    column: $table.payloadJson,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get dueDate => $composableBuilder(
+    column: $table.dueDate,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get isRead => $composableBuilder(
+    column: $table.isRead,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get dismissed => $composableBuilder(
+    column: $table.dismissed,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$LocalCreditNotificationsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $LocalCreditNotificationsTable> {
+  $$LocalCreditNotificationsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get eventKey =>
+      $composableBuilder(column: $table.eventKey, builder: (column) => column);
+
+  GeneratedColumn<String> get creditAccountId => $composableBuilder(
+    column: $table.creditAccountId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get payloadJson => $composableBuilder(
+    column: $table.payloadJson,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get dueDate =>
+      $composableBuilder(column: $table.dueDate, builder: (column) => column);
+
+  GeneratedColumn<bool> get isRead =>
+      $composableBuilder(column: $table.isRead, builder: (column) => column);
+
+  GeneratedColumn<bool> get dismissed =>
+      $composableBuilder(column: $table.dismissed, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+}
+
+class $$LocalCreditNotificationsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $LocalCreditNotificationsTable,
+          LocalCreditNotification,
+          $$LocalCreditNotificationsTableFilterComposer,
+          $$LocalCreditNotificationsTableOrderingComposer,
+          $$LocalCreditNotificationsTableAnnotationComposer,
+          $$LocalCreditNotificationsTableCreateCompanionBuilder,
+          $$LocalCreditNotificationsTableUpdateCompanionBuilder,
+          (
+            LocalCreditNotification,
+            BaseReferences<
+              _$AppDatabase,
+              $LocalCreditNotificationsTable,
+              LocalCreditNotification
+            >,
+          ),
+          LocalCreditNotification,
+          PrefetchHooks Function()
+        > {
+  $$LocalCreditNotificationsTableTableManager(
+    _$AppDatabase db,
+    $LocalCreditNotificationsTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$LocalCreditNotificationsTableFilterComposer(
+                $db: db,
+                $table: table,
+              ),
+          createOrderingComposer: () =>
+              $$LocalCreditNotificationsTableOrderingComposer(
+                $db: db,
+                $table: table,
+              ),
+          createComputedFieldComposer: () =>
+              $$LocalCreditNotificationsTableAnnotationComposer(
+                $db: db,
+                $table: table,
+              ),
+          updateCompanionCallback:
+              ({
+                Value<String> eventKey = const Value.absent(),
+                Value<String?> creditAccountId = const Value.absent(),
+                Value<String> payloadJson = const Value.absent(),
+                Value<DateTime?> dueDate = const Value.absent(),
+                Value<bool> isRead = const Value.absent(),
+                Value<bool> dismissed = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => LocalCreditNotificationsCompanion(
+                eventKey: eventKey,
+                creditAccountId: creditAccountId,
+                payloadJson: payloadJson,
+                dueDate: dueDate,
+                isRead: isRead,
+                dismissed: dismissed,
+                updatedAt: updatedAt,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String eventKey,
+                Value<String?> creditAccountId = const Value.absent(),
+                required String payloadJson,
+                Value<DateTime?> dueDate = const Value.absent(),
+                Value<bool> isRead = const Value.absent(),
+                Value<bool> dismissed = const Value.absent(),
+                required DateTime updatedAt,
+                Value<int> rowid = const Value.absent(),
+              }) => LocalCreditNotificationsCompanion.insert(
+                eventKey: eventKey,
+                creditAccountId: creditAccountId,
+                payloadJson: payloadJson,
+                dueDate: dueDate,
+                isRead: isRead,
+                dismissed: dismissed,
+                updatedAt: updatedAt,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$LocalCreditNotificationsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $LocalCreditNotificationsTable,
+      LocalCreditNotification,
+      $$LocalCreditNotificationsTableFilterComposer,
+      $$LocalCreditNotificationsTableOrderingComposer,
+      $$LocalCreditNotificationsTableAnnotationComposer,
+      $$LocalCreditNotificationsTableCreateCompanionBuilder,
+      $$LocalCreditNotificationsTableUpdateCompanionBuilder,
+      (
+        LocalCreditNotification,
+        BaseReferences<
+          _$AppDatabase,
+          $LocalCreditNotificationsTable,
+          LocalCreditNotification
+        >,
+      ),
+      LocalCreditNotification,
+      PrefetchHooks Function()
+    >;
+typedef $$LocalCreditInstallmentsTableCreateCompanionBuilder =
+    LocalCreditInstallmentsCompanion Function({
+      required String id,
+      required String creditAccountId,
+      required String householdId,
+      required String payloadJson,
+      required DateTime dueDate,
+      required String status,
+      Value<int> serverVersion,
+      required DateTime updatedAt,
+      Value<int> rowid,
+    });
+typedef $$LocalCreditInstallmentsTableUpdateCompanionBuilder =
+    LocalCreditInstallmentsCompanion Function({
+      Value<String> id,
+      Value<String> creditAccountId,
+      Value<String> householdId,
+      Value<String> payloadJson,
+      Value<DateTime> dueDate,
+      Value<String> status,
+      Value<int> serverVersion,
+      Value<DateTime> updatedAt,
+      Value<int> rowid,
+    });
+
+class $$LocalCreditInstallmentsTableFilterComposer
+    extends Composer<_$AppDatabase, $LocalCreditInstallmentsTable> {
+  $$LocalCreditInstallmentsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get creditAccountId => $composableBuilder(
+    column: $table.creditAccountId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get householdId => $composableBuilder(
+    column: $table.householdId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get payloadJson => $composableBuilder(
+    column: $table.payloadJson,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get dueDate => $composableBuilder(
+    column: $table.dueDate,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get status => $composableBuilder(
+    column: $table.status,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get serverVersion => $composableBuilder(
+    column: $table.serverVersion,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$LocalCreditInstallmentsTableOrderingComposer
+    extends Composer<_$AppDatabase, $LocalCreditInstallmentsTable> {
+  $$LocalCreditInstallmentsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get creditAccountId => $composableBuilder(
+    column: $table.creditAccountId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get householdId => $composableBuilder(
+    column: $table.householdId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get payloadJson => $composableBuilder(
+    column: $table.payloadJson,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get dueDate => $composableBuilder(
+    column: $table.dueDate,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get status => $composableBuilder(
+    column: $table.status,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get serverVersion => $composableBuilder(
+    column: $table.serverVersion,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$LocalCreditInstallmentsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $LocalCreditInstallmentsTable> {
+  $$LocalCreditInstallmentsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get creditAccountId => $composableBuilder(
+    column: $table.creditAccountId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get householdId => $composableBuilder(
+    column: $table.householdId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get payloadJson => $composableBuilder(
+    column: $table.payloadJson,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get dueDate =>
+      $composableBuilder(column: $table.dueDate, builder: (column) => column);
+
+  GeneratedColumn<String> get status =>
+      $composableBuilder(column: $table.status, builder: (column) => column);
+
+  GeneratedColumn<int> get serverVersion => $composableBuilder(
+    column: $table.serverVersion,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+}
+
+class $$LocalCreditInstallmentsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $LocalCreditInstallmentsTable,
+          LocalCreditInstallment,
+          $$LocalCreditInstallmentsTableFilterComposer,
+          $$LocalCreditInstallmentsTableOrderingComposer,
+          $$LocalCreditInstallmentsTableAnnotationComposer,
+          $$LocalCreditInstallmentsTableCreateCompanionBuilder,
+          $$LocalCreditInstallmentsTableUpdateCompanionBuilder,
+          (
+            LocalCreditInstallment,
+            BaseReferences<
+              _$AppDatabase,
+              $LocalCreditInstallmentsTable,
+              LocalCreditInstallment
+            >,
+          ),
+          LocalCreditInstallment,
+          PrefetchHooks Function()
+        > {
+  $$LocalCreditInstallmentsTableTableManager(
+    _$AppDatabase db,
+    $LocalCreditInstallmentsTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$LocalCreditInstallmentsTableFilterComposer(
+                $db: db,
+                $table: table,
+              ),
+          createOrderingComposer: () =>
+              $$LocalCreditInstallmentsTableOrderingComposer(
+                $db: db,
+                $table: table,
+              ),
+          createComputedFieldComposer: () =>
+              $$LocalCreditInstallmentsTableAnnotationComposer(
+                $db: db,
+                $table: table,
+              ),
+          updateCompanionCallback:
+              ({
+                Value<String> id = const Value.absent(),
+                Value<String> creditAccountId = const Value.absent(),
+                Value<String> householdId = const Value.absent(),
+                Value<String> payloadJson = const Value.absent(),
+                Value<DateTime> dueDate = const Value.absent(),
+                Value<String> status = const Value.absent(),
+                Value<int> serverVersion = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => LocalCreditInstallmentsCompanion(
+                id: id,
+                creditAccountId: creditAccountId,
+                householdId: householdId,
+                payloadJson: payloadJson,
+                dueDate: dueDate,
+                status: status,
+                serverVersion: serverVersion,
+                updatedAt: updatedAt,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String id,
+                required String creditAccountId,
+                required String householdId,
+                required String payloadJson,
+                required DateTime dueDate,
+                required String status,
+                Value<int> serverVersion = const Value.absent(),
+                required DateTime updatedAt,
+                Value<int> rowid = const Value.absent(),
+              }) => LocalCreditInstallmentsCompanion.insert(
+                id: id,
+                creditAccountId: creditAccountId,
+                householdId: householdId,
+                payloadJson: payloadJson,
+                dueDate: dueDate,
+                status: status,
+                serverVersion: serverVersion,
+                updatedAt: updatedAt,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$LocalCreditInstallmentsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $LocalCreditInstallmentsTable,
+      LocalCreditInstallment,
+      $$LocalCreditInstallmentsTableFilterComposer,
+      $$LocalCreditInstallmentsTableOrderingComposer,
+      $$LocalCreditInstallmentsTableAnnotationComposer,
+      $$LocalCreditInstallmentsTableCreateCompanionBuilder,
+      $$LocalCreditInstallmentsTableUpdateCompanionBuilder,
+      (
+        LocalCreditInstallment,
+        BaseReferences<
+          _$AppDatabase,
+          $LocalCreditInstallmentsTable,
+          LocalCreditInstallment
+        >,
+      ),
+      LocalCreditInstallment,
+      PrefetchHooks Function()
+    >;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
@@ -3574,4 +6553,18 @@ class $AppDatabaseManager {
       $$SyncCursorsTableTableManager(_db, _db.syncCursors);
   $$SyncEventsTableTableManager get syncEvents =>
       $$SyncEventsTableTableManager(_db, _db.syncEvents);
+  $$LocalCreditAccountsTableTableManager get localCreditAccounts =>
+      $$LocalCreditAccountsTableTableManager(_db, _db.localCreditAccounts);
+  $$LocalCreditBillsTableTableManager get localCreditBills =>
+      $$LocalCreditBillsTableTableManager(_db, _db.localCreditBills);
+  $$LocalCreditNotificationsTableTableManager get localCreditNotifications =>
+      $$LocalCreditNotificationsTableTableManager(
+        _db,
+        _db.localCreditNotifications,
+      );
+  $$LocalCreditInstallmentsTableTableManager get localCreditInstallments =>
+      $$LocalCreditInstallmentsTableTableManager(
+        _db,
+        _db.localCreditInstallments,
+      );
 }

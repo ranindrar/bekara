@@ -68,7 +68,15 @@ class SyncService {
             safeCode == 'UNAUTHENTICATED' ||
             safeCode == 'FORBIDDEN' ||
             safeCode == 'VALIDATION_ERROR' ||
-            safeCode == 'NOT_FOUND';
+            safeCode == 'NOT_FOUND' ||
+            safeCode == 'CREDIT_OVERPAYMENT' ||
+            safeCode == 'CREDIT_ACCOUNT_NOT_EMPTY' ||
+            safeCode == 'CREDIT_ACCOUNT_INACTIVE' ||
+            safeCode == 'CREDIT_ACCOUNT_REQUIRED' ||
+            safeCode == 'IMPORT_INVALID_FORMAT' ||
+            safeCode == 'ATTACHMENT_TOO_LARGE' ||
+            safeCode == 'ATTACHMENT_INVALID_TYPE' ||
+            safeCode == 'ATTACHMENT_METADATA_INVALID';
         await (database.update(database.pendingMutations)..where(
               (row) => row.clientReferenceId.equals(mutation.clientReferenceId),
             ))
@@ -165,6 +173,14 @@ class SyncService {
       'PERIOD_LOCKED',
       'IDEMPOTENCY_CONFLICT',
       'LOCKED_FUNDS_IN_USE',
+      'CREDIT_OVERPAYMENT',
+      'CREDIT_ACCOUNT_NOT_EMPTY',
+      'CREDIT_ACCOUNT_INACTIVE',
+      'CREDIT_ACCOUNT_REQUIRED',
+      'IMPORT_INVALID_FORMAT',
+      'ATTACHMENT_TOO_LARGE',
+      'ATTACHMENT_INVALID_TYPE',
+      'ATTACHMENT_METADATA_INVALID',
       'UNAUTHENTICATED',
       'FORBIDDEN',
       'VALIDATION_ERROR',

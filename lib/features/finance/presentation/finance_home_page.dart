@@ -1,10 +1,14 @@
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 
 import '../../../core/providers/core_providers.dart';
 import '../../auth/presentation/auth_controller.dart';
 import '../../cash_flow/presentation/cash_flow_page.dart';
+import '../../attachments/data/attachment_service.dart';
+import '../../credit/presentation/credit_page.dart';
 import '../../household/domain/household_context.dart';
 import '../data/finance_service.dart';
 import '../domain/finance_validation.dart';
@@ -51,6 +55,7 @@ class _FinanceHomePageState extends ConsumerState<FinanceHomePage> {
     'Transaksi',
     'Dompet',
     'Laporan',
+    'Kredit',
     'Cash Flow',
   ];
 
@@ -107,7 +112,7 @@ class _FinanceHomePageState extends ConsumerState<FinanceHomePage> {
                       'Buka Cash Flow untuk mengirim data ke server.',
                     ),
                     trailing: const Icon(Icons.chevron_right),
-                    onTap: () => setState(() => _index = 4),
+                    onTap: () => setState(() => _index = 5),
                   ),
                 ),
               Expanded(
@@ -122,12 +127,17 @@ class _FinanceHomePageState extends ConsumerState<FinanceHomePage> {
                     _TransactionsTab(
                       transactions: transactions,
                       onReverse: _correctTransaction,
+                      onAttachments: _showAttachments,
                     ),
                     _WalletsTab(
                       wallets: wallets,
                       onReconcile: _reconcileWallet,
                     ),
                     _ReportTab(report: report),
+                    CreditPage(
+                      householdId: widget.contextData.householdId!,
+                      onChanged: _refresh,
+                    ),
                     CashFlowPage(
                       contextData: widget.contextData,
                       onSynchronized: _refresh,
@@ -173,6 +183,10 @@ class _FinanceHomePageState extends ConsumerState<FinanceHomePage> {
           NavigationDestination(
             icon: Icon(Icons.pie_chart_outline),
             label: 'Laporan',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.credit_card_outlined),
+            label: 'Kredit',
           ),
           NavigationDestination(
             icon: Icon(Icons.insights_outlined),
@@ -866,6 +880,122 @@ class _FinanceHomePageState extends ConsumerState<FinanceHomePage> {
     balance.dispose();
     reason.dispose();
   }
+
+  Future<void> _showAttachments(Map<String, dynamic> transaction) async {
+    final client = ref.read(supabaseClientProvider);
+    final householdId = widget.contextData.householdId;
+    if (client == null || householdId == null) return;
+    final service = AttachmentService(client);
+    var attachments = <Map<String, dynamic>>[];
+    try {
+      attachments = await service.list(transaction['id'] as String);
+    } catch (error) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(FinanceValidation.friendlyError(error))),
+        );
+      }
+      return;
+    }
+    if (!mounted) return;
+    await showDialog<void>(
+      context: context,
+      builder: (dialogContext) => StatefulBuilder(
+        builder: (context, setDialogState) => AlertDialog(
+          title: const Text('Lampiran transaksi'),
+          content: SizedBox(
+            width: 480,
+            child: attachments.isEmpty
+                ? const Text('Belum ada lampiran pribadi.')
+                : ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: attachments.length,
+                    itemBuilder: (_, index) {
+                      final item = attachments[index];
+                      return ListTile(
+                        leading: Icon(
+                          item['contentType'] == 'application/pdf'
+                              ? Icons.picture_as_pdf_outlined
+                              : Icons.image_outlined,
+                        ),
+                        title: Text('${item['originalName']}'),
+                        subtitle: Text('${item['fileSize']} byte'),
+                        onTap: () async {
+                          final url = await service.signedUrl(
+                            item['objectKey'] as String,
+                          );
+                          await Clipboard.setData(ClipboardData(text: url));
+                          if (context.mounted) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text('Tautan aman 5 menit disalin.'),
+                              ),
+                            );
+                          }
+                        },
+                        trailing: IconButton(
+                          tooltip: 'Hapus',
+                          onPressed: () async {
+                            await service.delete(item['id'] as String);
+                            attachments = await service.list(
+                              transaction['id'] as String,
+                            );
+                            setDialogState(() {});
+                          },
+                          icon: const Icon(Icons.delete_outline),
+                        ),
+                      );
+                    },
+                  ),
+          ),
+          actions: [
+            TextButton.icon(
+              onPressed: () async {
+                final result = await FilePicker.platform.pickFiles(
+                  type: FileType.custom,
+                  allowedExtensions: const [
+                    'jpg',
+                    'jpeg',
+                    'png',
+                    'webp',
+                    'pdf',
+                  ],
+                  withData: true,
+                );
+                if (result == null || result.files.single.bytes == null) return;
+                final file = result.files.single;
+                final extension = file.extension?.toLowerCase();
+                final contentType = switch (extension) {
+                  'jpg' || 'jpeg' => 'image/jpeg',
+                  'png' => 'image/png',
+                  'webp' => 'image/webp',
+                  'pdf' => 'application/pdf',
+                  _ => throw const FormatException(
+                    'Tipe lampiran tidak didukung.',
+                  ),
+                };
+                await service.upload(
+                  householdId: householdId,
+                  transactionId: transaction['id'] as String,
+                  originalName: file.name,
+                  contentType: contentType,
+                  bytes: file.bytes!,
+                );
+                attachments = await service.list(transaction['id'] as String);
+                setDialogState(() {});
+              },
+              icon: const Icon(Icons.attach_file),
+              label: const Text('Tambah'),
+            ),
+            FilledButton(
+              onPressed: () => Navigator.pop(dialogContext),
+              child: const Text('Tutup'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 }
 
 String _money(dynamic value) => NumberFormat.currency(
@@ -965,9 +1095,14 @@ class _Metric extends StatelessWidget {
 }
 
 class _TransactionsTab extends StatelessWidget {
-  const _TransactionsTab({required this.transactions, required this.onReverse});
+  const _TransactionsTab({
+    required this.transactions,
+    required this.onReverse,
+    required this.onAttachments,
+  });
   final List<Map<String, dynamic>> transactions;
   final ValueChanged<Map<String, dynamic>> onReverse;
+  final ValueChanged<Map<String, dynamic>> onAttachments;
   @override
   Widget build(BuildContext context) => transactions.isEmpty
       ? const Center(child: Text('Belum ada transaksi.'))
@@ -976,6 +1111,7 @@ class _TransactionsTab extends StatelessWidget {
           itemBuilder: (_, i) {
             final t = transactions[i];
             return ListTile(
+              onTap: () => onAttachments(t),
               onLongPress: () => onReverse(t),
               leading: Icon(
                 t['kind'] == 'INCOME'

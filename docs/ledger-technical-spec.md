@@ -18,10 +18,12 @@
 | Reconciliation naik | CREDIT wallet |
 | Reconciliation turun | DEBIT wallet |
 | Reversal | Posting lawan yang mereferensikan posting asal |
-| Purchase PayLater (R1.2) | EXPENSE consumption + CREDIT liability account |
-| Bill payment (R1.2) | DEBIT cash wallet + DEBIT/reduction liability |
+| Purchase kredit | EXPENSE consumption + DEBIT wallet liability sehingga saldo kredit makin negatif |
+| Bill payment | DEBIT cash wallet + CREDIT wallet liability sehingga kewajiban berkurang |
+| Financing cost | EXPENSE finansial + DEBIT wallet liability |
+| Credit refund | REVERSAL consumption + CREDIT wallet liability |
 
-Catatan PayLater masih konseptual sampai chart-of-accounts/liability representation diputuskan.
+Wallet bertipe `CREDIT_CARD` atau `PAYLATER` adalah akun liability pada ledger dan tidak dihitung sebagai kas. Metadata limit, billing, scope ownership, dan cicilan berada pada aggregate `credit_account`; saldo ledger wallet tetap sumber kebenaran total kewajiban.
 
 ## 3. Rumus saldo
 
@@ -42,6 +44,9 @@ Scope mengatur pelaporan, bukan apakah posting mengubah saldo.
 - `PRIVATE` masuk personal spending pemilik.
 - `PRIVATE` pada shared wallet tetap mengubah shared family balance.
 - Internal transfer tidak masuk income/expense household.
+- Purchase kredit diakui sebagai consumption pada purchase date; pembayaran liability tidak masuk income/expense.
+- Purchase household pada akun kredit personal masuk household budget/report, tetapi bill tetap personal.
+- Household forecast hanya menerima outstanding household agregat agar detail bill personal tidak bocor.
 
 ## 5. State machine
 

@@ -1,6 +1,6 @@
 # Implementation Status
 
-Terakhir diverifikasi: 6 Agustus 2026.
+Terakhir diverifikasi: 8 Agustus 2026.
 
 ## Foundation — 4 Agustus 2026
 
@@ -39,9 +39,9 @@ Status `PENDING OPS` bukan implementasi aplikasi yang belum dibuat, tetapi gate 
 
 ## Next implementation slice
 
-1. Jalankan integration test dua akun untuk RLS dan RPC Fase 1.
-2. Uji seluruh flow pada perangkat Android nyata.
-3. Mulai gate Fase 2 setelah ledger dan sinkronisasi tervalidasi.
+1. Selesaikan authenticated mutation, integration test dua akun/dua perangkat, physical-device, dan restore gate Fase 2.
+2. Tulis API specification v3 serta threat model RLS untuk kredit dan attachment.
+3. Implementasikan core account, billing, cicilan, dan pembayaran Fase 3 sebelum import/attachment.
 
 ## Fase 1 — sedang dikerjakan
 
@@ -123,3 +123,25 @@ Implementasi Fase 2 selesai secara kode. Distribusi tester tetap menunggu behavi
 | Emulator form smoke test | PASS | Form tampil dengan tanggal Indonesia dan validasi nominal bekerja tanpa exception runtime |
 | Authenticated transaction mutation | READY FOR USER RETEST | Tidak membuat transaksi palsu pada ledger pengguna saat smoke test |
 | Regression verification | PASS | `flutter analyze`, 25 Flutter test, debug APK build, install, dan launch emulator lulus |
+
+## Fase 3 — implementasi kode selesai 8 Agustus 2026
+
+| Area | Status | Hasil / langkah berikutnya |
+|---|---|---|
+| Account PayLater/credit card | DONE CODE | PayLater personal; kartu personal/household; primary holder, limit, cutoff/due, opening liability, update/archive/version |
+| Billing dan cicilan | DONE CODE | Cutoff inklusif, day 29–31 clamp, due pertama setelah cutoff, tenor 1–36, financing cost terpisah, rounding installment akhir |
+| Ledger dan pembayaran | DONE CODE | Purchase/fee/liability, online payment, oldest-first + proportional scope, refund, reconciliation, anti-double-count |
+| Privacy dan household reserve | DONE CODE | Bill personal tersembunyi; household purchase dari kredit personal hanya membuka reserve agregat |
+| Notification | DONE CODE | Issued, H-7/H-3/H-1, due, overdue, read/dismiss, dan link ke bill berizin |
+| Import CSV | DONE CODE | Maksimum 5 MB/1000 row, delimiter/locale, preview, duplicate row/source hash, mapping, atomic commit |
+| Attachment | DONE CODE | Private bucket, MIME/size/path/metadata validation, signed URL 5 menit, cleanup dan audited delete |
+| Offline/sync/backup | DONE CODE | Purchase queue; payment/attachment online-only; Drift dan backup schema v3 kompatibel backup v2 |
+| Migration lokal | PASS | Lima migration Phase 3 diterapkan dari nol dengan `db reset` |
+| PostgreSQL verification | PASS | Database lint tanpa temuan; 114 assertion pgTAP lulus pada 5 file |
+| Flutter verification | PASS | Analyzer tanpa issue; 33 test lulus; debug APK berhasil dibuat |
+| Remote deployment | PENDING OPS | Migration belum didorong ke project remote pada slice ini |
+| Two-account/two-device test | PENDING OPS | Memerlukan dua akun terkonfirmasi dan dua device/emulator aktif |
+| Physical Android test | PENDING OPS | Picker CSV/attachment dan lifecycle perlu diuji pada perangkat fisik |
+| Full restore project uji | PENDING OPS | Restore cache idempotent teruji; latihan remote + Storage memerlukan project terpisah |
+
+Implementasi Phase 3 selesai secara kode dan otomatisasi lokal. Status release-ready tetap menunggu empat gate operasional di atas. Detail task dan keputusan final ada di [phase-3 tracker](phase-3-tracker.md); threat model/forward-fix ada di [security and release plan](phase-3-security-and-release.md).

@@ -14,14 +14,32 @@ class BackupService {
     final pending = await database.select(database.pendingMutations).get();
     final changes = await database.select(database.cachedSyncChanges).get();
     final cursors = await database.select(database.syncCursors).get();
+    final creditAccounts = await database
+        .select(database.localCreditAccounts)
+        .get();
+    final creditBills = await database.select(database.localCreditBills).get();
+    final creditNotifications = await database
+        .select(database.localCreditNotifications)
+        .get();
+    final creditInstallments = await database
+        .select(database.localCreditInstallments)
+        .get();
     final payload = <String, dynamic>{
-      'schemaVersion': 2,
+      'schemaVersion': 3,
       'createdAt': DateTime.now().toUtc().toIso8601String(),
       'remote': remoteData,
       'local': {
         'pendingMutations': pending.map((row) => row.toJson()).toList(),
         'syncChanges': changes.map((row) => row.toJson()).toList(),
         'syncCursors': cursors.map((row) => row.toJson()).toList(),
+        'creditAccounts': creditAccounts.map((row) => row.toJson()).toList(),
+        'creditBills': creditBills.map((row) => row.toJson()).toList(),
+        'creditNotifications': creditNotifications
+            .map((row) => row.toJson())
+            .toList(),
+        'creditInstallments': creditInstallments
+            .map((row) => row.toJson())
+            .toList(),
       },
     };
     final canonical = _encode(payload);
@@ -39,7 +57,8 @@ class BackupService {
     if (checksum != document['checksum']) {
       throw const FormatException('Checksum backup tidak cocok.');
     }
-    if (payload['schemaVersion'] != 2) {
+    final schemaVersion = payload['schemaVersion'];
+    if (schemaVersion != 2 && schemaVersion != 3) {
       throw const FormatException('Versi backup belum didukung.');
     }
     final local = Map<String, dynamic>.from(payload['local'] as Map);
@@ -89,6 +108,72 @@ class BackupService {
                 lastSuccessAt: Value(_parseDate(row['lastSuccessAt'])),
               ),
             );
+      }
+      if (schemaVersion == 3) {
+        for (final raw in local['creditAccounts'] as List? ?? const []) {
+          final row = Map<String, dynamic>.from(raw as Map);
+          await database
+              .into(database.localCreditAccounts)
+              .insertOnConflictUpdate(
+                LocalCreditAccountsCompanion.insert(
+                  id: row['id'] as String,
+                  householdId: row['householdId'] as String,
+                  payloadJson: row['payloadJson'] as String,
+                  serverVersion: Value(row['serverVersion'] as int),
+                  updatedAt: _parseDate(row['updatedAt'])!,
+                ),
+              );
+        }
+        for (final raw in local['creditBills'] as List? ?? const []) {
+          final row = Map<String, dynamic>.from(raw as Map);
+          await database
+              .into(database.localCreditBills)
+              .insertOnConflictUpdate(
+                LocalCreditBillsCompanion.insert(
+                  id: row['id'] as String,
+                  creditAccountId: row['creditAccountId'] as String,
+                  householdId: row['householdId'] as String,
+                  payloadJson: row['payloadJson'] as String,
+                  dueDate: Value(_parseDate(row['dueDate'])),
+                  status: row['status'] as String,
+                  serverVersion: Value(row['serverVersion'] as int),
+                  updatedAt: _parseDate(row['updatedAt'])!,
+                ),
+              );
+        }
+        for (final raw in local['creditNotifications'] as List? ?? const []) {
+          final row = Map<String, dynamic>.from(raw as Map);
+          await database
+              .into(database.localCreditNotifications)
+              .insertOnConflictUpdate(
+                LocalCreditNotificationsCompanion.insert(
+                  eventKey: row['eventKey'] as String,
+                  creditAccountId: Value(row['creditAccountId'] as String?),
+                  payloadJson: row['payloadJson'] as String,
+                  dueDate: Value(_parseDate(row['dueDate'])),
+                  isRead: Value(row['isRead'] as bool),
+                  dismissed: Value(row['dismissed'] as bool),
+                  updatedAt: _parseDate(row['updatedAt'])!,
+                ),
+              );
+        }
+        for (final raw in local['creditInstallments'] as List? ?? const []) {
+          final row = Map<String, dynamic>.from(raw as Map);
+          await database
+              .into(database.localCreditInstallments)
+              .insertOnConflictUpdate(
+                LocalCreditInstallmentsCompanion.insert(
+                  id: row['id'] as String,
+                  creditAccountId: row['creditAccountId'] as String,
+                  householdId: row['householdId'] as String,
+                  payloadJson: row['payloadJson'] as String,
+                  dueDate: _parseDate(row['dueDate'])!,
+                  status: row['status'] as String,
+                  serverVersion: Value(row['serverVersion'] as int),
+                  updatedAt: _parseDate(row['updatedAt'])!,
+                ),
+              );
+        }
       }
     });
   }

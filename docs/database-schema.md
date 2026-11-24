@@ -54,12 +54,30 @@ recurrence        WEEKLY, MONTHLY
 | `obligation_occurrences` | due_date, estimate/actual, status, transaction_id | satu occurrence per series/tanggal |
 | `sync_changes` | sequence, household_id, entity/id, operation | cursor monotonic dan tombstone |
 
+## 3.2 Tabel Fase 3
+
+| Tabel | Kolom domain utama | Constraint penting |
+|---|---|---|
+| `credit_accounts` | wallet, primary holder, type, scope, provider/name, last four, limit, statement/due day, opening liability, status/version | PayLater wajib personal; account hanya CREDIT_CARD/PAYLATER |
+| `billing_periods` | period start/end, due, principal, fee, paid, private/household outstanding, issued/status | due setelah cutoff; period unik per account |
+| `credit_purchases` | ledger aggregate, owner/category, original/posted date, scope/privacy, principal, financing cost, tenor/refund | tenor 1–36; household wajib visible; reference idempotent |
+| `installment_schedules` | bill/purchase, number, due, scope, principal/fee, paid/credited, status | total payment/credit tidak melewati schedule |
+| `credit_payments` | account, ledger aggregate, cash wallet, payer, amount/date/reference | amount positif; reference unik per payer |
+| `credit_payment_allocations` | payment, bill, installment, scope, principal/fee | allocation positif dan traceable |
+| `notification_receipts` | user, event key, read/dismissed | unik per user/event |
+| `import_batches` / `import_batch_rows` | actor, source hash, file/count/status, transaction/reference | 1–1000 row; source unik per actor |
+| `transaction_attachments` | transaction, private object key, original name, MIME, size, actor, delete/version | maksimum 5 MB; allowed MIME; soft delete |
+
+Drift schema v3 menyimpan cache `local_credit_accounts`, `local_credit_bills`, `local_credit_installments`, dan `local_credit_notifications`. Ledger server tetap sumber kebenaran; cache tidak boleh dipakai untuk menyelesaikan pembayaran offline.
+
 ## 4. Indeks minimum
 
 - Ledger: `(wallet_id, created_at)`, `(aggregate_id)`, `(transfer_id)`.
 - Transactions: `(household_id, transaction_date desc, id)`, `(owner_id, transaction_date desc)`.
 - Period: `(household_id, type, start_date, end_date)`.
 - Sync: `(household_id, sequence)`.
+- Credit: account `(household_id, scope, status)`, bill/installment `(credit_account_id, due_date, status)`.
+- Import/attachment: batch `(household_id, actor_id, created_at)`, active attachment `(transaction_id)`.
 - Audit: `(household_id, entity_type, entity_id, created_at desc)`.
 - Partial indexes untuk membership, wallet, dan category aktif.
 
@@ -76,6 +94,8 @@ recurrence        WEEKLY, MONTHLY
 
 `wallet_balances`, `transactions_visible`, `dashboard_balances`, `household_spending`, `personal_spending`, `sync_changes_for_user`; serta RPC yang didefinisikan pada API spec.
 
+Credit wallet adalah liability ledger: purchase/fee melakukan debit sehingga saldo negatif, sedangkan payment/refund melakukan credit. `list_wallets` menyembunyikan credit wallet dari pilihan dompet kas. Bill dan installment adalah read model yang dapat direkonsiliasi terhadap ledger.
+
 ## 7. Migration order
 
 1. Extensions, enums, helper timestamp/version.
@@ -89,9 +109,9 @@ recurrence        WEEKLY, MONTHLY
 9. RLS policies.
 10. Seed kategori dan integration tests.
 
-## 8. TBD sebelum migration final
+## 8. Keputusan lanjutan
 
-- Representasi liability PayLater: wallet khusus atau account terpisah.
+- Liability menggunakan wallet khusus yang terikat satu-ke-satu dengan `credit_accounts`; pembuatan wallet kredit generik ditolak.
 - Kebijakan transaksi privat pada shared wallet saat personal/household period berbeda status lock.
 - Apakah nominal IDR tetap `numeric(19,2)` atau menjadi integer rupiah.
 - Retensi audit dan tombstone.

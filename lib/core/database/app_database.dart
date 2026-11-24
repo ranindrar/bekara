@@ -67,6 +67,58 @@ class SyncEvents extends Table {
   DateTimeColumn get occurredAt => dateTime().withDefault(currentDateAndTime)();
 }
 
+class LocalCreditAccounts extends Table {
+  TextColumn get id => text()();
+  TextColumn get householdId => text()();
+  TextColumn get payloadJson => text()();
+  IntColumn get serverVersion => integer().withDefault(const Constant(1))();
+  DateTimeColumn get updatedAt => dateTime()();
+
+  @override
+  Set<Column<Object>> get primaryKey => {id};
+}
+
+class LocalCreditBills extends Table {
+  TextColumn get id => text()();
+  TextColumn get creditAccountId => text()();
+  TextColumn get householdId => text()();
+  TextColumn get payloadJson => text()();
+  DateTimeColumn get dueDate => dateTime().nullable()();
+  TextColumn get status => text()();
+  IntColumn get serverVersion => integer().withDefault(const Constant(1))();
+  DateTimeColumn get updatedAt => dateTime()();
+
+  @override
+  Set<Column<Object>> get primaryKey => {id};
+}
+
+class LocalCreditNotifications extends Table {
+  TextColumn get eventKey => text()();
+  TextColumn get creditAccountId => text().nullable()();
+  TextColumn get payloadJson => text()();
+  DateTimeColumn get dueDate => dateTime().nullable()();
+  BoolColumn get isRead => boolean().withDefault(const Constant(false))();
+  BoolColumn get dismissed => boolean().withDefault(const Constant(false))();
+  DateTimeColumn get updatedAt => dateTime()();
+
+  @override
+  Set<Column<Object>> get primaryKey => {eventKey};
+}
+
+class LocalCreditInstallments extends Table {
+  TextColumn get id => text()();
+  TextColumn get creditAccountId => text()();
+  TextColumn get householdId => text()();
+  TextColumn get payloadJson => text()();
+  DateTimeColumn get dueDate => dateTime()();
+  TextColumn get status => text()();
+  IntColumn get serverVersion => integer().withDefault(const Constant(1))();
+  DateTimeColumn get updatedAt => dateTime()();
+
+  @override
+  Set<Column<Object>> get primaryKey => {id};
+}
+
 @DriftDatabase(
   tables: [
     LocalWallets,
@@ -74,6 +126,10 @@ class SyncEvents extends Table {
     CachedSyncChanges,
     SyncCursors,
     SyncEvents,
+    LocalCreditAccounts,
+    LocalCreditBills,
+    LocalCreditNotifications,
+    LocalCreditInstallments,
   ],
 )
 class AppDatabase extends _$AppDatabase {
@@ -81,7 +137,7 @@ class AppDatabase extends _$AppDatabase {
     : super(executor ?? driftDatabase(name: 'bekara'));
 
   @override
-  int get schemaVersion => 2;
+  int get schemaVersion => 3;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -91,6 +147,12 @@ class AppDatabase extends _$AppDatabase {
         await migrator.createTable(cachedSyncChanges);
         await migrator.createTable(syncCursors);
         await migrator.createTable(syncEvents);
+      }
+      if (from < 3) {
+        await migrator.createTable(localCreditAccounts);
+        await migrator.createTable(localCreditBills);
+        await migrator.createTable(localCreditNotifications);
+        await migrator.createTable(localCreditInstallments);
       }
     },
   );

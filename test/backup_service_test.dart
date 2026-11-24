@@ -43,12 +43,37 @@ void main() {
             cursor: Value(BigInt.one),
           ),
         );
+    await database
+        .into(database.localCreditAccounts)
+        .insert(
+          LocalCreditAccountsCompanion.insert(
+            id: 'credit-1',
+            householdId: 'household-1',
+            payloadJson: '{"id":"credit-1"}',
+            updatedAt: DateTime.utc(2026, 8, 8),
+          ),
+        );
+    await database
+        .into(database.localCreditInstallments)
+        .insert(
+          LocalCreditInstallmentsCompanion.insert(
+            id: 'installment-1',
+            creditAccountId: 'credit-1',
+            householdId: 'household-1',
+            payloadJson: '{"id":"installment-1"}',
+            dueDate: DateTime.utc(2026, 9, 10),
+            status: 'SCHEDULED',
+            updatedAt: DateTime.utc(2026, 8, 8),
+          ),
+        );
 
     final service = BackupService(database);
     final backup = await service.createBackup({'transactions': <Object>[]});
     await database.delete(database.pendingMutations).go();
     await database.delete(database.cachedSyncChanges).go();
     await database.delete(database.syncCursors).go();
+    await database.delete(database.localCreditAccounts).go();
+    await database.delete(database.localCreditInstallments).go();
 
     await service.restoreLocalBackup(backup);
     await service.restoreLocalBackup(backup);
@@ -62,6 +87,14 @@ void main() {
       hasLength(1),
     );
     expect(await database.select(database.syncCursors).get(), hasLength(1));
+    expect(
+      await database.select(database.localCreditAccounts).get(),
+      hasLength(1),
+    );
+    expect(
+      await database.select(database.localCreditInstallments).get(),
+      hasLength(1),
+    );
   });
 
   test('CSV excludes private descriptions by default', () {
