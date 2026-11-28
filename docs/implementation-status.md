@@ -1,6 +1,6 @@
 # Implementation Status
 
-Terakhir diverifikasi: 8 Agustus 2026.
+Terakhir diverifikasi: 28 November 2026.
 
 ## Foundation — 4 Agustus 2026
 
@@ -39,9 +39,8 @@ Status `PENDING OPS` bukan implementasi aplikasi yang belum dibuat, tetapi gate 
 
 ## Next implementation slice
 
-1. Terapkan migration Fase 3 (`202608080001` sampai `202608080005`) ke Supabase remote dan jalankan ulang pgTAP di remote.
-2. Selesaikan gate operasional Fase 2–3: authenticated mutation, two-account/two-device, perangkat Android fisik (termasuk picker CSV/attachment), dan latihan restore pada project uji.
-3. Setelah seluruh gate lulus, siapkan distribusi tester internal.
+1. Selesaikan gate operasional Fase 2–3: authenticated mutation, two-account/two-device, perangkat Android fisik (termasuk picker CSV/attachment), dan latihan restore pada project uji.
+2. Setelah seluruh gate lulus, siapkan distribusi tester internal.
 
 ## Fase 1 — sedang dikerjakan
 
@@ -139,9 +138,18 @@ Implementasi Fase 2 selesai secara kode. Distribusi tester tetap menunggu behavi
 | Migration lokal | PASS | Lima migration Phase 3 diterapkan dari nol dengan `db reset` |
 | PostgreSQL verification | PASS | Database lint tanpa temuan; 114 assertion pgTAP lulus pada 5 file |
 | Flutter verification | PASS | Analyzer tanpa issue; 33 test lulus; debug APK berhasil dibuat |
-| Remote deployment | PENDING OPS | Migration belum didorong ke project remote pada slice ini |
+| Remote deployment | DONE | 28 Nov 2026: lima migration diterapkan setelah dump skema/data/role; remote up-to-date, lint bersih, 114 assertion pgTAP lulus pada remote |
 | Two-account/two-device test | PENDING OPS | Memerlukan dua akun terkonfirmasi dan dua device/emulator aktif |
 | Physical Android test | PENDING OPS | Picker CSV/attachment dan lifecycle perlu diuji pada perangkat fisik |
 | Full restore project uji | PENDING OPS | Restore cache idempotent teruji; latihan remote + Storage memerlukan project terpisah |
 
-Implementasi Phase 3 selesai secara kode dan otomatisasi lokal. Status release-ready tetap menunggu empat gate operasional di atas. Detail task dan keputusan final ada di [phase-3 tracker](phase-3-tracker.md); threat model/forward-fix ada di [security and release plan](phase-3-security-and-release.md).
+Implementasi Phase 3 selesai secara kode dan otomatisasi lokal. Status release-ready tetap menunggu tiga gate operasional di atas.
+
+### Deploy remote Fase 3 — 28 November 2026
+
+- Backup sebelum deploy: `supabase db dump --remote` (skema, data, role) disimpan di luar repo pada `D:\Project\Bekara-backups\2026-11-28-pre-phase3\`. File data memuat data `auth`; jangan di-commit atau dibagikan.
+- `supabase db push --remote`: migration `202608080001` sampai `202608080005` diterapkan; dry-run ulang melaporkan remote up-to-date.
+- `supabase db lint --linked`: tidak ada temuan.
+- `supabase test db --linked`: 5 file, 114 assertion lulus.
+- Perbaikan test: fixture notifikasi H-7 di `supabase/tests/phase3_tools_behavior.sql` kini juga menggeser `period_start`/`period_end`, sehingga `due_date > period_end` terpenuhi pada tanggal berapa pun (sebelumnya gagal kira-kira dari tanggal 9 sampai awal bulan berikutnya).
+- Supabase CLI dijalankan melalui `npx supabase` (v3.4.0); mutasi pada project production memerlukan flag `--yes`. Detail task dan keputusan final ada di [phase-3 tracker](phase-3-tracker.md); threat model/forward-fix ada di [security and release plan](phase-3-security-and-release.md).

@@ -72,7 +72,10 @@ $test$, 'member can pay household card from shared cash');
 select is((select paid_by::text from public.credit_payments limit 1),
   '40000000-0000-0000-0000-000000000002', 'payer identity is retained');
 
-update public.billing_periods set due_date = current_date + 7, status = 'OPEN', issued_at = now() - interval '1 day'
+-- Shift the whole statement window so the fixture stays valid on any calendar day
+-- (billing_periods requires due_date > period_end).
+update public.billing_periods set period_start = current_date - 30, period_end = current_date - 1,
+  due_date = current_date + 7, status = 'OPEN', issued_at = now() - interval '1 day'
 where credit_account_id = (select id from public.credit_accounts where provider_name = 'Family Card');
 select is((public.list_credit_notifications()->0->>'eventType'), 'H-7',
   'H-7 notification is generated for outstanding bill');
